@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Detalle del Símbolo</title>
+  <style>
+    body {
+      background-color: #1a1a1a;
+      color: #ffffff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      position: relative;
+    }
+    .header-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      padding: 10px;
+      background-color: #2f2f2f;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-basis: 30%;
+      min-width: 150px;
+    }
+    .time-stats {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      min-width: 0;
+    }
+    .interval-selector {
+      flex-basis: 20%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 5px;
+      min-width: 120px;
+    }
+    .header-controls .back-button button {
+      background-color: #00ff00;
+      color: #000000;
+      border: none;
+      padding: 8px 16px;
+      font-size: 14px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .header-controls .back-button button:hover {
+      background-color: #00cc00;
+    }
+    .header-controls h1 {
+      margin: 0;
+      color: #00ff00;
+      font-size: 20px;
+    }
+    .time-stats p {
+      margin: 0;
+      color: #cccccc;
+      font-size: 12px;
+    }
+    .interval-selector select, .interval-selector button {
+      background-color: #2f2f2f;
+      color: #ffffff;
+      border: 1px solid #444;
+      padding: 5px;
+      font-size: 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .interval-selector button:hover {
+      background-color: #444;
+    }
+    .error-message {
+      color: #ff5555;
+      text-align: center;
+      margin: 10px 0;
+      font-size: 14px;
+    }
+    .chart-container {
+      width: 100%;
+      height: 500px;
+      margin: 20px 0;
+      border: 1px solid #444;
+      background-color: #2f2f2f;
+    }
+    .container {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .panel {
+      flex: 1;
+      border: 1px solid #444;
+      background-color: #2f2f2f;
+      padding: 5px 10px 10px 10px;
+      min-width: 300px;
+    }
+    .title-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      width: 100%;
+      text-align: center;
+      margin-top: -5px;
+    }
+    h2 {
+      margin: 0;
+      color: #00ff00;
+      font-size: 20px;
+    }
+    .asks-title {
+      color: #ff0000;
+    }
+    .processed-count {
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .asks-processed {
+      color: #ff0000;
+    }
+    .bids-processed {
+      color: #55ff55;
+    }
+    .indicator-circle {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .indicator-circle-start {
+      margin-right: 5px;
+    }
+    .indicator-circle-end {
+      margin-left: 5px;
+    }
+    .circle-red {
+      background-color: #ff0000 !important;
+    }
+    .circle-green {
+      background-color: #00ff00 !important;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #2a2a2a;
+      border: 1px solid #444;
+      margin-bottom: 10px;
+      font-size: 12px;
+    }
+    th, td {
+      padding: 4px;
+      border: 1px solid #444;
+      position: relative;
+      cursor: pointer;
+      line-height: 1.2;
+    }
+    th {
+      background-color: #333;
+      color: #00ff00;
+      font-weight: 500;
+      text-align: center;
+    }
+    td {
+      text-align: center;
+      user-select: none;
+    }
+    td span {
+      display: inline-block;
+      width: 100%;
+      text-align: center;
+      user-select: text;
+    }
+    td::selection, td span::selection {
+      background: rgba(0, 255, 0, 0.3);
+    }
+    .ask-row { color: #cccccc; }
+    .bid-row { color: #cccccc; }
+    tr:hover { background-color: #3a3a3a; }
+    .highlight-top {
+      background-color: rgba(255, 255, 0, 0.2);
+      color: #ffffff;
+      font-weight: bold;
+    }
+    .color-transparent {
+      background-color: transparent;
+      transition: background-color 0.2s ease-out, color 0.2s ease-out;
+    }
+    .color-blue {
+      background-color: #090ef5;
+      transition: background-color 0.2s ease-out, color 0.2s ease-out;
+    }
+    .color-blue td {
+      color: #ffffff;
+    }
+    .color-yellow {
+      background-color: #e0f30a;
+      transition: background-color 0.2s ease-out, color 0.2s ease-out;
+    }
+    .color-yellow td {
+      color: #000000;
+    }
+    .color-orange {
+      background-color: #f5550f;
+      transition: background-color 0.2s ease-out, color 0.2s ease-out;
+    }
+    .color-orange td {
+      color: #000000;
+    }
+    .bold-row td {
+      font-weight: bold;
+    }
+    .highlight-red {
+      background-color: rgba(249, 12, 12, 0.5) !important;
+      transition: background-color 1s ease-out;
+    }
+    .highlight-red td {
+      color: #ffffff !important;
+      font-weight: bold;
+    }
+    tr.highlight-green {
+      background-color: #00ff00 !important;
+      transition: background-color 1s ease-out;
+    }
+    tr.highlight-green td {
+      color: #000000 !important;
+      font-weight: bold;
+    }
+    .legend {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-top: 10px;
+    }
+    .legend-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      border-radius: 3px;
+      font-size: 10px;
+      background-color: #2f2f2f;
+      color: #cccccc;
+      margin-bottom: 5px;
+      line-height: 1.2;
+    }
+    .legend .bid-updated-legend {
+      background-color: #00ff00 !important;
+      color: #000000 !important;
+    }
+    .copied {
+      background-color: rgba(0, 255, 0, 0.3);
+      transition: background-color 0.5s ease;
+    }
+    .price-cell:hover {
+      background-color: rgba(0, 255, 0, 0.1);
+      transition: none;
+    }
+    .highlight-total {
+      background-color: #004d00;
+      padding: 2px 4px;
+      border-radius: 3px;
+    }
+    .selected-row {
+      background-color: rgba(0, 255, 0, 0.3) !important;
+    }
+    .selected-column {
+      width: 30px;
+      text-align: center;
+      position: relative;
+    }
+    .selected-column:hover {
+      background-color: rgba(0, 255, 0, 0.1);
+    }
+    .selected-column:hover::after {
+      content: 'Actualizaciones pausadas';
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #333;
+      color: #fff;
+      padding: 2px 5px;
+      font-size: 10px;
+      border-radius: 3px;
+    }
+    .selection-checkbox {
+      cursor: pointer;
+    }
+    .selection-checkbox:active {
+      outline: 2px solid #00ff00;
+    }
+    @media (max-width: 768px) {
+      .header-controls {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+      .header-left, .time-stats, .interval-selector {
+        flex-basis: auto;
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+      }
+    }
+  </style>
+  <script src="https://unpkg.com/lightweight-charts@3.8.0/dist/lightweight-charts.standalone.production.js"></script>
+</head>
+<body>
+  <div class="header-controls">
+    <div class="header-left">
+      <div class="back-button">
+        <button onclick="window.location.href='/'">Atrás</button>
+      </div>
+      <h1 id="symbol-title"></h1>
+    </div>
+    <div class="time-stats">
+      <p id="local-time"></p>
+      <p>Total prices processed: <span id="total-prices">0</span></p>
+      <p id="ws-status">WebSocket: Desconectado</p>
+    </div>
+    <div class="interval-selector">
+      <label for="interval-select">Intervalo: </label>
+      <select id="interval-select" onchange="cambiarIntervaloVelas()">
+        <option value="15m">15 minutos</option>
+        <option value="1h" selected>1 hora</option>
+        <option value="4h">4 horas</option>
+        <option value="1d">1 día</option>
+      </select>
+      <button onclick="autoScaleChart()">Auto Scale</button>
+    </div>
+  </div>
+  <div class="chart-container" id="chart-container"></div>
+  <div id="error-message" class="error-message"></div>
+  <div class="container">
+    <div class="panel">
+      <div class="title-row">
+        <span class="indicator-circle indicator-circle-start" id="asks-indicator-start"></span>
+        <h2 class="asks-title">Top Asks:</h2>
+        <span class="processed-count asks-processed" id="asks-processed">0</span>
+        <span class="indicator-circle indicator-circle-end" id="asks-indicator-end"></span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Age</th>
+            <th>Price</th>
+            <th>Qty</th>
+            <th>Usdt</th>
+            <th>% 2 price</th>
+            <th>Hits</th>
+            <th class="selected-column">Select</th>
+          </tr>
+        </thead>
+        <tbody id="asks-body"></tbody>
+      </table>
+      <div class="legend">
+        <div class="legend-row" style="background-color: rgba(249, 12, 12, 0.5) !important; color: #ffffff !important;">Ask updated (Sell, White Text)</div>
+        <div class="legend-row" style="background-color: #090ef5 !important; color: #ffffff !important;">Asks Within 0.5% to 1% of markPrice (White Text)</div>
+        <div class="legend-row" style="background-color: #e0f30a !important; color: #000000 !important;">Asks Within 0.1% to 0.5% of markPrice (Black Text)</div>
+        <div class="legend-row" style="background-color: #f5550f !important; color: #000000 !important;">Asks Within 0.1% of markPrice (Black Text)</div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="title-row">
+        <span class="indicator-circle indicator-circle-start" id="bids-indicator-start"></span>
+        <h2>Top Bids:</h2>
+        <span class="processed-count bids-processed" id="bids-processed">0</span>
+        <span class="indicator-circle indicator-circle-end" id="bids-indicator-end"></span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Age</th>
+            <th>Price</th>
+            <th>Qty</th>
+            <th>Usdt</th>
+            <th>% 2 price</th>
+            <th>Hits</th>
+            <th class="selected-column">Select</th>
+          </tr>
+        </thead>
+        <tbody id="bids-body"></tbody>
+      </table>
+      <div class="legend">
+        <div class="legend-row bid-updated-legend" style="background-color: #00ff00 !important; color: #000000 !important;">Bid updated (Buy, Black Text)</div>
+        <div class="legend-row" style="background-color: #090ef5 !important; color: #ffffff !important;">Bids Within 0.5% to 1% of markPrice (White Text)</div>
+        <div class="legend-row" style="background-color: #e0f30a !important; color: #000000 !important;">Bids Within 0.1% to 0.5% of markPrice (Black Text)</div>
+        <div class="legend-row" style="background-color: #f5550f !important; color: #000000 !important;">Bids Within 0.1% of markPrice (Black Text)</div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const symbol = params.get("symbol") || "BTCUSDT";
+    document.getElementById("symbol-title").innerText = `${symbol}: 0.0000 USDT`;
+    const tickerWsUrl = `wss://stream.binance.com:443/ws/!miniTicker@arr`;
+    const spotWsUrl = `wss://stream.binance.com:443/ws/${symbol.toLowerCase()}@depth@100ms`;
+    const futuresWsUrl = `wss://fstream.binance.com/ws/${symbol.toLowerCase()}@depth@100ms`;
+    const futuresMarkPriceWsUrl = `wss://fstream.binance.com/ws/${symbol.toLowerCase()}@markPrice@1s`;
+    let klineWs = null;
+    let wsConnectionCount = 0;
+    let markPriceSpot = 0;
+    let markPriceFutures = 0;
+    let spotAsksData = [];
+    let spotBidsData = [];
+    let futuresAsksData = [];
+    let futuresBidsData = [];
+    let spotAsksProcessed = 0;
+    let spotBidsProcessed = 0;
+    let futuresAsksProcessed = 0;
+    let futuresBidsProcessed = 0;
+    let asksProcessed = 0;
+    let bidsProcessed = 0;
+    let pendingUpdate = false;
+    let isInteracting = false;
+    const rowColors = new Map();
+    const COLOR_DURATION_MS = 5000;
+    let selectedPrices = new Map(); // {precio: {series, isAsk}}
+    for (let key in localStorage) {
+      if (key.startsWith('selectedPrices_') && key !== `selectedPrices_${symbol}`) {
+        console.log(`Eliminando ${key}`);
+        localStorage.removeItem(key);
+      }
+    }
+    const savedPrices = JSON.parse(localStorage.getItem(`selectedPrices_${symbol}`) || '[]');
+    savedPrices.forEach(price => selectedPrices.set(price, { series: null, isAsk: false }));
+    let currentInterval = '1h';
+    let asksPriceMap = new Map();
+    let bidsPriceMap = new Map();
+    let klineRetryCount = 0;
+    const MAX_RETRIES = 2;
+    let reconnectTimeout = null;
+    const errorMessageElement = document.getElementById("error-message");
+    let chart = null;
+    let candlestickSeries = null;
+    let candlesData = [];
+
+    function mostrarError(mensaje) {
+      errorMessageElement.textContent = mensaje;
+      console.error(mensaje);
+    }
+
+    function limpiarError() {
+      errorMessageElement.textContent = "";
+    }
+
+    function guardarPreciosSeleccionados() {
+      const prices = Array.from(selectedPrices.keys());
+      localStorage.setItem(`selectedPrices_${symbol}`, JSON.stringify(prices));
+    }
+
+    function configurarEventos() {
+      document.querySelectorAll('#asks-body, #bids-body').forEach(tableBody => {
+        tableBody.addEventListener('mouseover', (event) => {
+          if (event.target.closest('.price-cell') || event.target.closest('.selected-column')) {
+            console.log('Hover en select/precio, isInteracting = true');
+            isInteracting = true;
+          }
+        });
+        tableBody.addEventListener('mouseout', (event) => {
+          if (event.target.closest('.price-cell') || event.target.closest('.selected-column')) {
+            setTimeout(() => {
+              console.log('Mouse out, isInteracting = false');
+              isInteracting = false;
+            }, 500);
+          }
+        });
+        tableBody.addEventListener('mousedown', (event) => {
+          const priceCell = event.target.closest('.price-cell');
+          if (priceCell) {
+            isInteracting = true;
+            manejarSeleccion(event);
+          }
+        });
+        tableBody.addEventListener('click', (event) => {
+          const priceCell = event.target.closest('.price-cell');
+          if (priceCell) {
+            copiarCeldaPrecio(event);
+          }
+        });
+      });
+    }
+
+    const tickerSocket = new WebSocket(tickerWsUrl);
+    tickerSocket.onopen = () => {
+      wsConnectionCount++;
+      console.log(`Ticker WebSocket conectado (Conexiones: ${wsConnectionCount})`);
+      document.getElementById("ws-status").textContent = "WebSocket: Conectado (Ticker)";
+    };
+    tickerSocket.onerror = (error) => {
+      mostrarError(`Error en Ticker WebSocket: ${JSON.stringify(error)}`);
+    };
+    tickerSocket.onclose = () => {
+      wsConnectionCount = Math.max(0, wsConnectionCount - 1);
+      mostrarError("Ticker WebSocket cerrado. Reconectando...");
+      document.getElementById("ws-status").textContent = "WebSocket: Desconectado (Ticker)";
+      setTimeout(() => {
+        tickerSocket = new WebSocket(tickerWsUrl);
+      }, 3000);
+    };
+    tickerSocket.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        const symbolData = data.find(item => item.s === symbol.toUpperCase());
+        if (symbolData) {
+          const newPrice = parseFloat(symbolData.c);
+          markPriceSpot = newPrice;
+          document.getElementById("symbol-title").innerText = `${symbol}: ${formatearPrecio(markPriceSpot)} USDT`;
+          actualizarTimestamp();
+          programarActualizacionTabla();
+          if (!candlesData.length) {
+            initializeChart();
+            loadHistoricalKlines();
+          }
+        }
+      } catch (err) {
+        mostrarError(`Error al procesar mensaje de Ticker: ${err.message}`);
+      }
+    };
+
+    const futuresMarkPriceSocket = new WebSocket(futuresMarkPriceWsUrl);
+    futuresMarkPriceSocket.onopen = () => {
+      wsConnectionCount++;
+      console.log(`Futures Mark Price WebSocket conectado (Conexiones: ${wsConnectionCount})`);
+    };
+    futuresMarkPriceSocket.onerror = (error) => {
+      mostrarError(`Error en Futures Mark Price WebSocket: ${JSON.stringify(error)}`);
+    };
+    futuresMarkPriceSocket.onclose = () => {
+      wsConnectionCount = Math.max(0, wsConnectionCount - 1);
+      mostrarError("Futures Mark Price WebSocket cerrado. Reconectando...");
+      setTimeout(() => {
+        futuresMarkPriceSocket = new WebSocket(futuresMarkPriceWsUrl);
+      }, 3000);
+    };
+    futuresMarkPriceSocket.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        markPriceFutures = parseFloat(data.p);
+      } catch (err) {
+        mostrarError(`Error al procesar mensaje de Futures Mark Price: ${err.message}`);
+      }
+    };
+
+    const spotDepthSocket = new WebSocket(spotWsUrl);
+    spotDepthSocket.onopen = () => {
+      wsConnectionCount++;
+      console.log(`Spot Depth WebSocket conectado (Conexiones: ${wsConnectionCount})`);
+    };
+    spotDepthSocket.onerror = (error) => {
+      mostrarError(`Error en Spot Depth WebSocket: ${JSON.stringify(error)}`);
+    };
+    spotDepthSocket.onclose = () => {
+      wsConnectionCount = Math.max(0, wsConnectionCount - 1);
+      mostrarError("Spot Depth WebSocket cerrado. Reconectando...");
+      setTimeout(() => {
+        spotDepthSocket = new WebSocket(spotWsUrl);
+      }, 3000);
+    };
+    spotDepthSocket.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        console.log(`Spot Depth recibido: ${JSON.stringify(data)}`);
+        const now = Date.now();
+        if (data.a && Array.isArray(data.a)) {
+          spotAsksData = actualizarOrdenes(spotAsksData, data.a, now, true, 'spot');
+          spotAsksProcessed += data.a.length;
+        } else {
+          console.warn(`Datos de asks inválidos en Spot Depth: ${JSON.stringify(data.a)}`);
+        }
+        if (data.b && Array.isArray(data.b)) {
+          spotBidsData = actualizarOrdenes(spotBidsData, data.b, now, false, 'spot');
+          spotBidsProcessed += data.b.length;
+        } else {
+          console.warn(`Datos de bids inválidos en Spot Depth: ${JSON.stringify(data.b)}`);
+        }
+        actualizarContadoresProcesados();
+      } catch (err) {
+        mostrarError(`Error al procesar mensaje de Spot Depth: ${err.message}`);
+      }
+    };
+
+    const futuresDepthSocket = new WebSocket(futuresWsUrl);
+    futuresDepthSocket.onopen = () => {
+      wsConnectionCount++;
+      console.log(`Futures Depth WebSocket conectado (Conexiones: ${wsConnectionCount})`);
+    };
+    futuresDepthSocket.onerror = (error) => {
+      mostrarError(`Error en Futures Depth WebSocket: ${JSON.stringify(error)}`);
+    };
+    futuresDepthSocket.onclose = () => {
+      wsConnectionCount = Math.max(0, wsConnectionCount - 1);
+      mostrarError("Futures Depth WebSocket cerrado. Reconectando...");
+      setTimeout(() => {
+        futuresDepthSocket = new WebSocket(futuresWsUrl);
+      }, 3000);
+    };
+    futuresDepthSocket.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        console.log(`Futures Depth recibido: ${JSON.stringify(data)}`);
+        const now = Date.now();
+        if (data.a && Array.isArray(data.a)) {
+          futuresAsksData = actualizarOrdenes(futuresAsksData, data.a, now, true, 'futures');
+          futuresAsksProcessed += data.a.length;
+        } else {
+          console.warn(`Datos de asks inválidos en Futures Depth: ${JSON.stringify(data.a)}`);
+        }
+        if (data.b && Array.isArray(data.b)) {
+          futuresBidsData = actualizarOrdenes(futuresBidsData, data.b, now, false, 'futures');
+          futuresBidsProcessed += data.b.length;
+        } else {
+          console.warn(`Datos de bids inválidos en Futures Depth: ${JSON.stringify(data.b)}`);
+        }
+        actualizarContadoresProcesados();
+      } catch (err) {
+        mostrarError(`Error al procesar mensaje de Futures Depth: ${err.message}`);
+      }
+    };
+
+    function actualizarOrdenes(ordenesExistentes, nuevasOrdenes, ahora, esAsk, mercado) {
+      const mapaOrdenes = new Map(ordenesExistentes.map(o => [o.price, o]));
+      nuevasOrdenes.forEach(([p, q]) => {
+        const precio = parseFloat(p);
+        const cantidad = parseFloat(q);
+        const usdt = precio * cantidad;
+        if (cantidad === 0) {
+          mapaOrdenes.delete(precio);
+          rowColors.delete(precio);
+        } else {
+          if (mapaOrdenes.has(precio)) {
+            const existente = mapaOrdenes.get(precio);
+            const hitsAnteriores = existente.hits || 0;
+            existente.qty = cantidad;
+            existente.usdt = usdt;
+            existente.lastUpdated = ahora;
+            existente.hits = hitsAnteriores + 1;
+            existente.colorAssignedTime = ahora;
+            existente.market = mercado;
+          } else {
+            mapaOrdenes.set(precio, {
+              price: precio,
+              qty: cantidad,
+              usdt,
+              lastUpdated: ahora,
+              colorAssignedTime: ahora,
+              hits: 1,
+              market: mercado
+            });
+          }
+        }
+      });
+      return Array.from(mapaOrdenes.values());
+    }
+
+    function combinarOrdenes(ordenesSpot, ordenesFutures, precioSpot, precioFutures, esAsk) {
+      const mapaCombinado = new Map();
+      [...ordenesSpot, ...ordenesFutures].forEach(orden => {
+        const precio = orden.price;
+        const mercado = orden.market;
+        const precioReferencia = mercado === 'spot' ? precioSpot : precioFutures;
+        const diferencia = precioReferencia ? Math.abs((precio - precioReferencia) / precioReferencia) * 100 : Infinity;
+        if (diferencia > 10) return;
+        if (mapaCombinado.has(precio)) {
+          const existente = mapaCombinado.get(precio);
+          existente.qty += orden.qty;
+          existente.usdt += orden.usdt;
+          existente.hits += orden.hits;
+          existente.lastUpdated = Math.max(existente.lastUpdated, orden.lastUpdated);
+          existente.colorAssignedTime = Math.max(existente.colorAssignedTime, orden.lastUpdated);
+          existente.markets = [...(existente.markets || []), mercado].filter((v, i, a) => a.indexOf(v) === i);
+        } else {
+          mapaCombinado.set(precio, {
+            price: precio,
+            qty: orden.qty,
+            usdt: orden.usdt,
+            lastUpdated: orden.lastUpdated,
+            colorAssignedTime: orden.lastUpdated,
+            hits: orden.hits,
+            markets: [mercado]
+          });
+        }
+      });
+      return Array.from(mapaCombinado.values())
+        .sort((a, b) => b.usdt - a.usdt)
+        .slice(0, 30);
+    }
+
+    function obtenerClaseColor(item, precioSpot, precioFutures, ahora) {
+      let precioReferencia;
+      if (item.markets.includes('spot') && item.markets.includes('futures')) {
+        precioReferencia = (precioSpot + precioFutures) / 2;
+      } else if (item.markets.includes('spot')) {
+        precioReferencia = precioSpot;
+      } else {
+        precioReferencia = precioFutures;
+      }
+      if (!precioReferencia || precioReferencia === 0) return "color-transparent";
+      const diferencia = ((item.price - precioReferencia) / precioReferencia) * 100;
+      const difAbsoluta = Math.abs(diferencia);
+      const edadColor = ahora - item.colorAssignedTime;
+      if (edadColor > COLOR_DURATION_MS) {
+        return "color-transparent";
+      }
+      if (difAbsoluta <= 0.1) {
+        return "color-orange";
+      } else if (difAbsoluta > 0.1 && difAbsoluta <= 0.5) {
+        return "color-yellow";
+      } else if (difAbsoluta > 0.5 && difAbsoluta <= 1) {
+        return "color-blue";
+      }
+      return "color-transparent";
+    }
+
+    function actualizarTablas() {
+      const asksCombinados = combinarOrdenes(spotAsksData, futuresAsksData, markPriceSpot, markPriceFutures, true);
+      const bidsCombinados = combinarOrdenes(spotBidsData, futuresBidsData, markPriceSpot, markPriceFutures, false);
+      asksPriceMap.clear();
+      asksCombinados.forEach(item => asksPriceMap.set(item.price, true));
+      bidsPriceMap.clear();
+      bidsCombinados.forEach(item => bidsPriceMap.set(item.price, true));
+      actualizarTabla("asks-body", asksCombinados, markPriceSpot, markPriceFutures, true);
+      actualizarTabla("bids-body", bidsCombinados, markPriceSpot, markPriceFutures, false);
+    }
+
+    function actualizarTabla(tablaId, datos, precioSpot, precioFutures, esAsk) {
+      const cuerpoTabla = document.getElementById(tablaId);
+      const ahora = Date.now();
+      const filasExistentes = new Map();
+      Array.from(cuerpoTabla.children).forEach(fila => {
+        const precio = parseFloat(fila.cells[2].textContent);
+        filasExistentes.set(precio, fila);
+      });
+      const fragmento = document.createDocumentFragment();
+      datos.forEach((item, idx) => {
+        const tiempoEdad = formatearEdad(ahora - item.lastUpdated);
+        let precioReferencia;
+        if (item.markets.includes('spot') && item.markets.includes('futures')) {
+          precioReferencia = (precioSpot + precioFutures) / 2;
+        } else if (item.markets.includes('spot')) {
+          precioReferencia = precioSpot;
+        } else {
+          precioReferencia = precioFutures;
+        }
+        const porcentaje = precioReferencia ? (((item.price - precioReferencia) / precioReferencia) * 100).toFixed(3) + "%" : "---";
+        let fila = filasExistentes.get(item.price);
+        if (!fila) {
+          fila = document.createElement("tr");
+          fila.className = esAsk ? "ask-row" : "bid-row";
+        }
+        if (idx < 4) {
+          fila.classList.add("highlight-top");
+        } else {
+          fila.classList.remove("highlight-top");
+        }
+        const nuevaClaseColor = obtenerClaseColor(item, precioSpot, precioFutures, ahora);
+        fila.classList.remove("color-transparent", "color-blue", "color-yellow", "color-orange");
+        fila.classList.add(nuevaClaseColor);
+        rowColors.set(item.price, nuevaClaseColor);
+        if (nuevaClaseColor !== "color-transparent") {
+          fila.classList.add("bold-row");
+        } else {
+          fila.classList.remove("bold-row");
+        }
+        const actualizadoRecientemente = item.lastUpdated && (ahora - item.lastUpdated) <= 1000;
+        if (actualizadoRecientemente) {
+          const claseResaltado = esAsk ? "highlight-red" : "highlight-green";
+          fila.classList.remove("highlight-red", "highlight-green");
+          fila.classList.add(claseResaltado);
+          setTimeout(() => {
+            fila.classList.remove("highlight-red", "highlight-green");
+            fila.classList.remove("color-transparent", "color-blue", "color-yellow", "color-orange");
+            const claseColorActualizada = obtenerClaseColor(item, precioSpot, precioFutures, Date.now());
+            fila.classList.add(claseColorActualizada);
+            rowColors.set(item.price, claseColorActualizada);
+            if (claseColorActualizada !== "color-transparent") {
+              fila.classList.add("bold-row");
+            } else {
+              fila.classList.remove("bold-row");
+            }
+          }, 1000);
+        } else {
+          fila.classList.remove("highlight-red", "highlight-green");
+        }
+        const estaSeleccionado = selectedPrices.has(item.price);
+        if (estaSeleccionado) {
+          fila.classList.add("selected-row");
+        } else {
+          fila.classList.remove("selected-row");
+        }
+        fila.innerHTML = `
+          <td><span>${idx + 1}</span></td>
+          <td class="age-cell"><span>${tiempoEdad}</span></td>
+          <td class="price-cell"><span>${formatearPrecio(item.price)}</span></td>
+          <td><span>${formatearCantidad(item.qty)}</span></td>
+          <td><span>${formatearUsdt(item.usdt)}</span></td>
+          <td><span>${porcentaje}</span></td>
+          <td><span>${item.hits}</span></td>
+          <td class="selected-column">
+            <input type="checkbox" class="selection-checkbox" ${estaSeleccionado ? 'checked' : ''} 
+            onchange="alternarSeleccionPrecio(${item.price}, ${esAsk}, this)">
+          </td>
+        `;
+        fragmento.appendChild(fila);
+        filasExistentes.delete(item.price);
+      });
+      filasExistentes.forEach(fila => {
+        const precio = parseFloat(fila.cells[2].textContent);
+        rowColors.delete(precio);
+        fila.remove();
+      });
+      cuerpoTabla.innerHTML = '';
+      cuerpoTabla.appendChild(fragmento);
+      redrawSelectedLines();
+    }
+
+    function actualizarColumnasEdad() {
+      const ahora = Date.now();
+      ["asks-body", "bids-body"].forEach(tablaId => {
+        const cuerpoTabla = document.getElementById(tablaId);
+        Array.from(cuerpoTabla.children).forEach(fila => {
+          const precio = parseFloat(fila.cells[2].textContent);
+          const datos = tablaId === "asks-body" ? combinarOrdenes(spotAsksData, futuresAsksData, markPriceSpot, markPriceFutures, true) : combinarOrdenes(spotBidsData, futuresBidsData, markPriceSpot, markPriceFutures, false);
+          const item = datos.find(item => item.price === precio);
+          if (item) {
+            const tiempoEdad = formatearEdad(ahora - item.lastUpdated);
+            fila.cells[1].querySelector('span').textContent = tiempoEdad;
+          }
+        });
+      });
+    }
+
+    setInterval(actualizarColumnasEdad, 100);
+
+    function manejarSeleccion(evento) {
+      const celda = evento.target.closest('.price-cell');
+      if (!celda) return;
+      const span = celda.querySelector('span');
+      if (!span) return;
+      const seleccion = window.getSelection();
+      if (!seleccion.toString()) {
+        const rango = document.createRange();
+        rango.selectNodeContents(span);
+        seleccion.removeAllRanges();
+        seleccion.addRange(rango);
+      }
+      evento.preventDefault();
+    }
+
+    function copiarCeldaPrecio(evento) {
+      const celda = evento.target.closest('.price-cell');
+      if (!celda) return;
+      const texto = celda.textContent.trim();
+      if (!texto) {
+        console.error("No hay texto para copiar en la celda de precio");
+        return;
+      }
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(texto).then(() => {
+          celda.classList.add("copied");
+          setTimeout(() => celda.classList.remove("copied"), 500);
+          isInteracting = false;
+        }).catch(err => {
+          console.error("Error al copiar precio con navigator.clipboard:", err.message);
+          copiarTextoAlternativo(texto, celda);
+        });
+      } else {
+        console.warn("navigator.clipboard no disponible o contexto inseguro, usando fallback");
+        copiarTextoAlternativo(texto, celda);
+      }
+      evento.preventDefault();
+    }
+
+    function copiarTextoAlternativo(texto, celda) {
+      const areaTexto = document.createElement("textarea");
+      areaTexto.value = texto;
+      areaTexto.style.position = "fixed";
+      areaTexto.style.opacity = "0";
+      document.body.appendChild(areaTexto);
+      areaTexto.focus();
+      areaTexto.select();
+      try {
+        document.execCommand('copy');
+        celda.classList.add("copied");
+        setTimeout(() => celda.classList.remove("copied"), 500);
+        isInteracting = false;
+      } catch (err) {
+        console.error("Error al copiar con fallback:", err.message);
+      } finally {
+        document.body.removeChild(areaTexto);
+      }
+    }
+
+    function programarActualizacionTabla() {
+      if (!pendingUpdate && !isInteracting) {
+        pendingUpdate = true;
+        requestAnimationFrame(() => {
+          actualizarTablas();
+          pendingUpdate = false;
+        });
+      }
+    }
+
+    function formatearPrecio(precio) {
+      const decimales = obtenerDecimales(symbol);
+      return precio.toFixed(decimales).replace(/(\.\d+?)0+$/, "$1");
+    }
+
+    function obtenerDecimales(symbol) {
+      const decimales = {
+        "USDT": 2,
+        "ETHUSDT": 2,
+        "PEPEUSDT": 8,
+        "SHIBUSDT": 8,
+        "BTCUSDT": 2,
+        "XRPUSDT": 4,
+        "SOLUSDT": 4
+      };
+      return decimales[symbol] || 4;
+    }
+
+    function formatearCantidad(cantidad) {
+      if (cantidad >= 1000) return (cantidad / 1000).toFixed(2) + "K";
+      return cantidad.toFixed(3);
+    }
+
+    function formatearEdad(milisegundos) {
+      if (milisegundos < 0) {
+        console.warn(`Edad negativa detectada: ${milisegundos}ms`);
+        return "00:00:00";
+      }
+      const segundosTotales = Math.floor(milisegundos / 1000);
+      const horas = String(Math.floor(segundosTotales / 3600)).padStart(2, "0");
+      const minutos = String(Math.floor((segundosTotales % 3600) / 60)).padStart(2, "0");
+      const segundos = String(segundosTotales % 60).padStart(2, "0");
+      return `${horas}:${minutos}:${segundos}`;
+    }
+
+    function actualizarTimestamp() {
+      const ahora = new Date();
+      const offset = -4 * 60;
+      const horaLocal = new Date(ahora.getTime() + (offset * 60 * 1000));
+      const opciones = {
+        weekday: 'short',
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        fractionalSecondDigits: 1,
+        hour12: true,
+        timeZone: 'UTC'
+      };
+      const fechaFormateada = horaLocal.toLocaleString('en-US', opciones)
+        .replace(',', '')
+        .replace(/\//g, '/')
+        .replace(' AM', ' AM')
+        .replace(' PM', ' PM');
+      document.getElementById('local-time').textContent = `${fechaFormateada} GMT-04:00`;
+    }
+
+    function formatearUsdt(valor) {
+      if (valor >= 1.0e6) return (valor / 1.0e6).toFixed(2) + "M";
+      if (valor >= 1.0e3) return (valor / 1.0e3).toFixed(2) + "K";
+      return valor.toFixed(2);
+    }
+
+    function initializeChart() {
+      try {
+        const chartContainer = document.getElementById("chart-container");
+        if (!chartContainer) {
+          throw new Error("Contenedor del gráfico no encontrado (#chart-container).");
+        }
+        // Limpiar gráfico existente
+        if (chart) {
+          chart.remove();
+          chart = null;
+          candlestickSeries = null;
+          selectedPrices.forEach((data, price) => {
+            if (data.series) {
+              chart.removeSeries(data.series);
+            }
+          });
+          selectedPrices.clear();
+        }
+        if (typeof LightweightCharts === 'undefined') {
+          throw new Error("LightweightCharts no está disponible. Verifica el enlace del CDN.");
+        }
+        chart = LightweightCharts.createChart(chartContainer, {
+          width: chartContainer.offsetWidth,
+          height: 500,
+          layout: {
+            backgroundColor: '#2f2f2f',
+            textColor: '#d1d4dc',
+          },
+          grid: {
+            vertLines: { color: '#444' },
+            horzLines: { color: '#444' },
+          },
+          timeScale: {
+            timeVisible: true,
+            secondsVisible: false,
+          },
+          rightPriceScale: {
+            borderColor: '#444',
+          },
+        });
+        candlestickSeries = chart.addCandlestickSeries({
+          upColor: '#00ff00',
+          downColor: '#ff0000',
+          borderVisible: false,
+          wickUpColor: '#00ff00',
+          wickDownColor: '#ff0000',
+        });
+        chart.applyOptions({
+          priceScale: {
+            scaleMargins: { top: 0.1, bottom: 0.1 },
+          },
+        });
+        redrawSelectedLines();
+      } catch (err) {
+        mostrarError(`Error al inicializar el gráfico: ${err.message}`);
+        console.error("Detalles del error:", err);
+      }
+    }
+
+    async function loadHistoricalKlines() {
+      try {
+        const response = await fetch(`https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${currentInterval}&limit=150`);
+        if (!response.ok) {
+          throw new Error(`Error HTTP: ${response.status} - ${response.statusText}`);
+        }
+        const data = await response.json();
+        candlesData = data.map(kline => ({
+          time: Math.floor(kline[0] / 1000),
+          open: parseFloat(kline[1]),
+          high: parseFloat(kline[2]),
+          low: parseFloat(kline[3]),
+          close: parseFloat(kline[4]),
+        }));
+        if (candlestickSeries) {
+          candlestickSeries.setData(candlesData);
+          chart.timeScale().fitContent();
+        } else {
+          console.warn("candlestickSeries no está inicializada. No se puede cargar el historial de velas.");
+          mostrarError("Error: candlestickSeries no inicializada.");
+        }
+      } catch (err) {
+        mostrarError(`Error al cargar el historial de velas: ${err.message}`);
+        console.error("Detalles del error:", err);
+        const now = new Date();
+        const intervalMs = currentInterval === '1d' ? 24 * 60 * 60 * 1000 :
+                          currentInterval === '4h' ? 4 * 60 * 60 * 1000 :
+                          currentInterval === '15m' ? 15 * 60 * 1000 : 60 * 60 * 1000;
+        candlesData = Array.from({ length: 150 }, (_, i) => {
+          const time = Math.floor((now.getTime() - i * intervalMs) / 1000);
+          const basePrice = markPriceSpot || 100;
+          const open = basePrice * (0.95 + Math.random() * 0.1);
+          const close = basePrice * (0.95 + Math.random() * 0.1);
+          return {
+            time,
+            open,
+            high: Math.max(open, close) * (1 + Math.random() * 0.02),
+            low: Math.min(open, close) * (1 - Math.random() * 0.02),
+            close,
+          };
+        }).reverse();
+        if (candlestickSeries) {
+          candlestickSeries.setData(candlesData);
+          chart.timeScale().fitContent();
+        }
+      }
+    }
+
+    function setupKlineSocket() {
+      if (klineRetryCount >= MAX_RETRIES) {
+        mostrarError(`Máximo de reintentos alcanzado para WebSocket Kline (${currentInterval}). Usando polling REST.`);
+        iniciarPollingRest();
+        return;
+      }
+      // Forzar limpieza antes de intentar una nueva conexión
+      limpiarWebSocketKline();
+      if (wsConnectionCount >= 5) {
+        mostrarError(`Límite de conexiones WebSocket alcanzado (${wsConnectionCount}). Intentando de nuevo...`);
+        klineRetryCount++;
+        const retraso = Math.min(10000 * Math.pow(2, klineRetryCount), 60000);
+        reconnectTimeout = setTimeout(setupKlineSocket, retraso);
+        return;
+      }
+      const wsUrl = `wss://stream.binance.com:443/ws/${symbol.toLowerCase()}@kline_${currentInterval}`;
+      console.log(`Conectando a WebSocket: ${wsUrl}`);
+      klineWs = new WebSocket(wsUrl);
+      klineWs.onopen = () => {
+        wsConnectionCount++;
+        console.log(`WebSocket Kline conectado para ${currentInterval} (Conexiones: ${wsConnectionCount})`);
+        document.getElementById("ws-status").textContent = `WebSocket: Conectado (Kline ${currentInterval})`;
+        klineRetryCount = 0;
+        const mensajeSuscripcion = {
+          method: "SUBSCRIBE",
+          params: [`${symbol.toLowerCase()}@kline_${currentInterval}`],
+          id: 1
+        };
+        console.log(`Enviando mensaje de suscripción: ${JSON.stringify(mensajeSuscripción)}`);
+        klineWs.send(JSON.stringify(mensajeSuscripción));
+      };
+      klineWs.onerror = (error) => {
+        mostrarError(`Error en WebSocket Kline para ${currentInterval}: ${JSON.stringify(error)}`);
+      };
+      klineWs.onclose = (evento) => {
+        wsConnectionCount = Math.max(0, wsConnectionCount - 1);
+        mostrarError(`WebSocket Kline cerrado para ${currentInterval}. Código: ${evento.code}, Razón: ${evento.reason || 'Desconocida'}. Reconectando...`);
+        document.getElementById("ws-status").textContent = `WebSocket: Reconectando (Intento ${klineRetryCount + 1}/${MAX_RETRIES})`;
+        limpiarWebSocketKline();
+        klineRetryCount++;
+        const retraso = Math.min(10000 * Math.pow(2, klineRetryCount), 60000);
+        console.log(`Reintentando conexión en ${retraso}ms (Intento ${klineRetryCount}/${MAX_RETRIES})`);
+        reconnectTimeout = setTimeout(setupKlineSocket, retraso);
+      };
+      klineWs.onmessage = (event) => {
+        try {
+          console.log(`Mensaje recibido (Kline ${currentInterval}): ${event.data}`);
+          const datos = JSON.parse(event.data);
+          if (datos.result === null && datos.id === 1) {
+            console.log(`Suscripción confirmada para ${symbol.toLowerCase()}@kline_${currentInterval}`);
+            return;
+          }
+          const vela = datos.k;
+          if (!vela) {
+            console.warn(`Mensaje de Kline sin datos de vela: ${JSON.stringify(datos)}`);
+            return;
+          }
+          const time = Math.floor(vela.t / 1000);
+          const open = parseFloat(vela.o);
+          const high = parseFloat(vela.h);
+          const low = parseFloat(vela.l);
+          const close = parseFloat(vela.c);
+          if (isNaN(time) || isNaN(open) || isNaN(high) || isNaN(low) || isNaN(close)) {
+            console.warn(`Datos de vela inválidos: ${JSON.stringify(vela)}`);
+            return;
+          }
+          const candleData = { time, open, high, low, close };
+          if (!candlestickSeries) {
+            console.warn("candlestickSeries no está inicializada. Omitiendo actualización de velas.");
+            return;
+          }
+          const lastCandle = candlesData[candlesData.length - 1];
+          const intervalSeconds = currentInterval === '1d' ? 86400 :
+                                 currentInterval === '4h' ? 14400 :
+                                 currentInterval === '15m' ? 900 : 3600;
+          const now = Math.floor(Date.now() / 1000);
+          const candleEndTime = lastCandle ? lastCandle.time + intervalSeconds : now;
+          if (vela.x || (now >= candleEndTime)) {
+            if (lastCandle && lastCandle.time === time) {
+              candlestickSeries.update(candleData);
+              candlesData[candlesData.length - 1] = candleData;
+            } else {
+              candlesData.push(candleData);
+              candlestickSeries.setData(candlesData);
+              chart.timeScale().fitContent();
+              if (candlesData.length > 150) {
+                candlesData.shift();
+                candlestickSeries.setData(candlesData);
+              }
+            }
+          } else if (lastCandle && lastCandle.time === time) {
+            candlestickSeries.update(candleData);
+            candlesData[candlesData.length - 1] = candleData;
+          }
+        } catch (err) {
+          mostrarError(`Error al procesar mensaje de Kline (${currentInterval}): ${err.message}`);
+        }
+      };
+    }
+
+    function limpiarWebSocketKline() {
+      if (klineWs) {
+        console.log('Limpiando WebSocket Kline');
+        klineWs.onopen = null;
+        klineWs.onmessage = null;
+        klineWs.onerror = null;
+        klineWs.onclose = null;
+        if (klineWs.readyState === WebSocket.OPEN || klineWs.readyState === WebSocket.CONNECTING) {
+          klineWs.close();
+        }
+        klineWs = null;
+        wsConnectionCount = Math.max(0, wsConnectionCount - 1);
+      }
+      if (reconnectTimeout) {
+        clearTimeout(reconnectTimeout);
+        reconnectTimeout = null;
+      }
+      document.getElementById("ws-status").textContent = "WebSocket: Desconectado (Kline)";
+    }
+
+    function iniciarPollingRest() {
+      const intervaloPolling = setInterval(() => {
+        if (klineWs && klineWs.readyState === WebSocket.OPEN) {
+          clearInterval(intervaloPolling);
+          return;
+        }
+        fetch(`https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${currentInterval}&limit=1`)
+          .then(respuesta => respuesta.json())
+          .then(datos => {
+            if (!datos || !datos.length) return;
+            const vela = datos[0];
+            const time = Math.floor(vela[0] / 1000);
+            const open = parseFloat(vela[1]);
+            const high = parseFloat(vela[2]);
+            const low = parseFloat(vela[3]);
+            const close = parseFloat(vela[4]);
+            if (isNaN(time) || isNaN(open) || isNaN(high) || isNaN(low) || isNaN(close)) {
+              console.warn(`Datos de vela inválidos en polling: ${JSON.stringify(vela)}`);
+              return;
+            }
+            const candleData = { time, open, high, low, close };
+            if (!candlestickSeries) {
+              console.warn("candlestickSeries no está inicializada en polling.");
+              return;
+            }
+            const lastCandle = candlesData[candlesData.length - 1];
+            if (!lastCandle || lastCandle.time !== time) {
+              candlesData.push(candleData);
+              candlestickSeries.setData(candlesData);
+              if (candlesData.length > 150) {
+                candlesData.shift();
+                candlestickSeries.setData(candlesData);
+              }
+            } else {
+              candlestickSeries.update(candleData);
+              candlesData[candlesData.length - 1] = candleData;
+            }
+          })
+          .catch(err => {
+            mostrarError(`Error en polling REST: ${err.message}`);
+          });
+      }, 30000);
+    }
+
+    function cambiarIntervaloVelas() {
+      const nuevoIntervalo = document.getElementById("interval-select").value;
+      if (nuevoIntervalo === currentInterval) return;
+      currentInterval = nuevoIntervalo;
+      klineRetryCount = 0;
+      mostrarError("Cargando nuevo intervalo de velas...");
+      // Limpiar datos y gráfico antes de reiniciar
+      candlesData = [];
+      if (candlestickSeries) {
+        candlestickSeries.setData([]);
+      }
+      initializeChart();
+      loadHistoricalKlines().then(() => {
+        setupKlineSocket();
+        limpiarError(); // Limpiar el mensaje una vez que se complete
+      }).catch((err) => {
+        mostrarError(`Error al cambiar intervalo: ${err.message}`);
+        setupKlineSocket(); // Intentar configurar el WebSocket incluso si falla la carga
+        setTimeout(limpiarError, 5000); // Limpiar después de 5 segundos si persiste
+      });
+    }
+
+    function autoScaleChart() {
+      if (chart) {
+        chart.timeScale().fitContent();
+        chart.priceScale().applyOptions({
+          autoScale: true,
+        });
+      }
+    }
+
+    function drawSelectedPriceLine(price, isAsk) {
+      if (!chart || !candlestickSeries) {
+        console.warn("Chart o candlestickSeries no están inicializados. No se puede dibujar la línea de precio.");
+        return;
+      }
+      if (isNaN(price)) {
+        console.error("Precio inválido:", price);
+        return;
+      }
+      const now = Math.floor(Date.now() / 1000);
+      const lineSeries = chart.addLineSeries({
+        color: isAsk ? '#ff0000' : '#00ff00',
+        lineWidth: 1,
+        priceLineVisible: false,
+        lastValueVisible: false,
+      });
+      lineSeries.setData([
+        { time: now - 86400, value: price },
+        { time: now, value: price },
+      ]);
+      lineSeries.createPriceLine({
+        price: price,
+        color: isAsk ? '#ff0000' : '#00ff00',
+        lineWidth: 1,
+        lineStyle: LightweightCharts.LineStyle.Dashed,
+        title: `Selected Price: ${formatearPrecio(price)}`,
+      });
+      selectedPrices.set(price, { series: lineSeries, isAsk: isAsk });
+      guardarPreciosSeleccionados();
+    }
+
+    function removeSelectedPriceLine(price) {
+      if (!chart) {
+        console.warn("Chart no inicializado. No se puede eliminar la línea de precio.");
+        return;
+      }
+      const priceData = selectedPrices.get(price);
+      if (priceData && priceData.series) {
+        try {
+          chart.removeSeries(priceData.series);
+        } catch (err) {
+          console.warn(`Error al remover serie para precio ${price}: ${err.message}`);
+        }
+      }
+      selectedPrices.delete(price);
+      guardarPreciosSeleccionados();
+    }
+
+    function redrawSelectedLines() {
+      if (!chart) {
+        console.warn("Chart no inicializado. No se pueden redibujar las líneas seleccionadas.");
+        return;
+      }
+      const pricesToRedraw = new Map(selectedPrices);
+      selectedPrices.clear();
+      pricesToRedraw.forEach((data, price) => {
+        if (data.series) {
+          try {
+            chart.removeSeries(data.series);
+          } catch (err) {
+            console.warn(`Error al remover serie para precio ${price} durante redibujado: ${err.message}`);
+          }
+        }
+        if (asksPriceMap.has(price) || bidsPriceMap.has(price)) {
+          const isAsk = asksPriceMap.has(price);
+          drawSelectedPriceLine(price, isAsk);
+        }
+      });
+    }
+
+    window.addEventListener('resize', () => {
+      if (chart) {
+        chart.resize(document.getElementById("chart-container").offsetWidth, 500);
+        redrawSelectedLines();
+      }
+    });
+
+    function alternarSeleccionPrecio(precio, esAsk, checkbox) {
+      console.log(`Alternando precio: ${precio}, esAsk: ${esAsk}, checked: ${checkbox.checked}`);
+      if (checkbox.checked) {
+        if (!selectedPrices.has(precio)) {
+          drawSelectedPriceLine(precio, esAsk);
+          if (esAsk) {
+            asksPriceMap.set(precio, true);
+          } else {
+            bidsPriceMap.set(precio, true);
+          }
+          console.log(`Precio añadido: ${precio}`);
+        }
+      } else {
+        if (selectedPrices.has(precio)) {
+          removeSelectedPriceLine(precio);
+          asksPriceMap.delete(precio);
+          bidsPriceMap.delete(precio);
+          console.log(`Precio eliminado: ${precio}`);
+        }
+      }
+      actualizarTablas();
+    }
+
+    function actualizarContadoresProcesados() {
+      asksProcessed = spotAsksProcessed + futuresAsksProcessed;
+      bidsProcessed = spotBidsProcessed + futuresBidsProcessed;
+      const totalPrecios = asksProcessed + bidsProcessed;
+      document.getElementById("total-prices").innerText = totalPrecios.toLocaleString();
+      document.getElementById("asks-processed").innerText = asksProcessed.toLocaleString();
+      document.getElementById("bids-processed").innerText = bidsProcessed.toLocaleString();
+      if (totalPrecios > 250000) {
+        document.getElementById("total-prices").classList.add("highlight-total");
+      } else {
+        document.getElementById("total-prices").classList.remove("highlight-total");
+      }
+      const indicadorAsksInicio = document.getElementById("asks-indicator-start");
+      const indicadorAsksFin = document.getElementById("asks-indicator-end");
+      const indicadorBidsInicio = document.getElementById("bids-indicator-start");
+      const indicadorBidsFin = document.getElementById("bids-indicator-end");
+      indicadorAsksInicio.classList.remove("circle-red", "circle-green");
+      indicadorAsksFin.classList.remove("circle-red", "circle-green");
+      indicadorBidsInicio.classList.remove("circle-red", "circle-green");
+      indicadorBidsFin.classList.remove("circle-red", "circle-green");
+      if (asksProcessed > bidsProcessed) {
+        indicadorAsksInicio.classList.add("circle-red");
+        indicadorAsksFin.classList.add("circle-red");
+      } else if (bidsProcessed > asksProcessed) {
+        indicadorBidsInicio.classList.add("circle-green");
+        indicadorBidsFin.classList.add("circle-green");
+      }
+      programarActualizacionTabla();
+    }
+
+    configurarEventos();
+    setInterval(actualizarTimestamp, 50);
+    initializeChart();
+    loadHistoricalKlines();
+    setupKlineSocket();
+  </script>
+</body>
+</html>

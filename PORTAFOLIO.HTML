@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portafolio Cripto Avanzado</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2ecc71;
+            --dark: #1a1a2e;
+            --darker: #16213e;
+            --darkest: #0f0f1a;
+            --light: #e6e6e6;
+            --lighter: #f5f5f5;
+            --danger: #ff6b6b;
+            --warning: #f39c12;
+            --info: #1abc9c;
+            --neutral: #95a5a6;
+            --table-bg: #1a1a2e;
+            --table-header-bg: #16213e;
+            --table-row-odd: #1a1a2e;
+            --table-row-even: #16213e;
+            --table-border: #2a2a4a;
+            --card-bg: #16213e;
+            --input-bg: #1a1a2e;
+            --text-color: #e6e6e6;
+            --text-muted: #95a5a6;
+            --positive-text: #2ecc71;
+            --negative-text: #ff6b6b;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--darkest);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: var(--darker);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        h1, h2, h3 {
+            color: var(--lighter);
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0;
+        }
+        
+        .last-updated {
+            font-size: 0.85em;
+            color: var(--text-muted);
+            text-align: right;
+        }
+        
+        .portfolio-table-container {
+            width: 100%;
+            margin: 25px 0;
+            border-radius: 10px;
+            overflow-x: auto;
+            background: var(--table-bg);
+            border: 1px solid var(--table-border);
+        }
+        
+        #portfolio-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--table-bg);
+            min-width: 1600px;
+        }
+        
+        #portfolio-table th {
+            background: var(--table-header-bg);
+            color: var(--lighter);
+            font-weight: 500;
+            text-align: left;
+            padding: 15px;
+            position: sticky;
+            top: 0;
+            border-bottom: 2px solid var(--table-border);
+        }
+        
+        #portfolio-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--table-border);
+            color: var(--text-color);
+            white-space: nowrap;
+            overflow: visible;
+            text-overflow: clip;
+        }
+        
+        #portfolio-table tr:nth-child(even) {
+            background-color: var(--table-row-even);
+        }
+        
+        #portfolio-table tr:hover td {
+            background-color: rgba(52, 152, 219, 0.15);
+        }
+        
+        #portfolio-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        #portfolio-table th:nth-child(1), #portfolio-table td:nth-child(1) { width: 150px; }
+        #portfolio-table th:nth-child(2), #portfolio-table td:nth-child(2) { width: 150px; }
+        #portfolio-table th:nth-child(3), #portfolio-table td:nth-child(3) { width: 120px; }
+        #portfolio-table th:nth-child(4), #portfolio-table td:nth-child(4) { width: 150px; }
+        #portfolio-table th:nth-child(5), #portfolio-table td:nth-child(5) { width: 150px; }
+        #portfolio-table th:nth-child(6), #portfolio-table td:nth-child(6) { width: 150px; }
+        #portfolio-table th:nth-child(7), #portfolio-table td:nth-child(7) { width: 150px; }
+        #portfolio-table th:nth-child(8), #portfolio-table td:nth-child(8) { width: 180px; }
+        #portfolio-table th:nth-child(9), #portfolio-table td:nth-child(9) { width: 150px; }
+        #portfolio-table th:nth-child(10), #portfolio-table td:nth-child(10) { width: 150px; }
+        #portfolio-table th:nth-child(11), #portfolio-table td:nth-child(11) { width: 150px; }
+        
+        .positive {
+            color: var(--positive-text);
+            font-weight: 600;
+        }
+        
+        .negative {
+            color: var(--negative-text);
+            font-weight: 600;
+        }
+        
+        .neutral {
+            color: var(--neutral);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--lighter);
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--table-border);
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+            transition: all 0.3s;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+        }
+        
+        input:focus, select:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.3);
+        }
+        
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .summary {
+            background: linear-gradient(135deg, var(--darker), var(--dark));
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: 1px solid var(--table-border);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .summary-item {
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border: 1px solid var(--table-border);
+        }
+        
+        .summary-item h3 {
+            margin-top: 0;
+            color: var(--lighter);
+            font-size: 16px;
+            font-weight: 500;
+            border-bottom: 1px solid var(--table-border);
+            padding-bottom: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .summary-value {
+            font-size: 22px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--text-color);
+        }
+        
+        .chart-container {
+            height: 350px;
+            margin: 30px 0;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: 1px solid var(--table-border);
+        }
+        
+        .loading {
+            color: var(--neutral);
+            font-style: italic;
+        }
+        
+        .connection-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .connection-status::before {
+            content: "";
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        
+        .connected {
+            background-color: rgba(46, 204, 113, 0.15);
+            color: var(--secondary);
+        }
+        
+        .connected::before {
+            background-color: var(--secondary);
+        }
+        
+        .disconnected {
+            background-color: rgba(231, 76, 60, 0.15);
+            color: var(--danger);
+        }
+        
+        .disconnected::before {
+            background-color: var(--danger);
+        }
+        
+        .connecting {
+            background-color: rgba(241, 196, 15, 0.15);
+            color: var(--warning);
+        }
+        
+        .connecting::before {
+            background-color: var(--warning);
+            animation: pulse 1.5s infinite;
+        }
+        
+        .error {
+            background-color: rgba(231, 76, 60, 0.15);
+            color: var(--danger);
+        }
+        
+        .error::before {
+            background-color: var(--danger);
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .backup-section {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .backup-btn {
+            padding: 8px 15px;
+            font-size: 14px;
+            border-radius: 5px;
+            min-width: 120px;
+        }
+        
+        .backup-btn.export {
+            background-color: var(--secondary);
+        }
+        
+        .backup-btn.import {
+            background-color: var(--info);
+        }
+        
+        .backup-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        #import-file {
+            display: none;
+        }
+        
+        .crypto-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 14px;
+            min-width: 100px;
+            text-align: center;
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .comprador-col {
+            font-weight: 500;
+            color: #a78bfa;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        @media (max-width: 1200px) {
+            .container {
+                padding: 15px;
+                width: 100%;
+                overflow-x: auto;
+            }
+            
+            .backup-section {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .summary {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .last-updated {
+                text-align: left;
+                width: 100%;
+            }
+            
+            .summary {
+                grid-template-columns: 1fr;
+            }
+            
+            .backup-section {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .backup-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-container">
+            <h1>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L4 7L12 12L20 7L12 2Z" fill="#3498db"/>
+                    <path d="M4 12L12 17L20 12" stroke="#3498db" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M4 17L12 22L20 17" stroke="#3498db" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                Portafolio Cripto 
+                <span id="connection-status" class="connection-status disconnected">Desconectado</span>
+            </h1>
+            <div class="last-updated" id="last-updated">Última actualización: Nunca</div>
+        </div>
+        
+        <div class="backup-section">
+            <button class="backup-btn export" onclick="exportData()">Exportar</button>
+            <button class="backup-btn import" onclick="importData()">Importar</button>
+            <input type="file" id="import-file" accept=".json">
+        </div>
+        
+        <div class="summary">
+            <div class="summary-item">
+                <h3>Inversión Total</h3>
+                <div class="summary-value">
+                    <span id="total-investment" class="crypto-badge neutral">$0.00</span>
+                </div>
+            </div>
+            
+            <div class="summary-item">
+                <h3>Valor Actual</h3>
+                <div class="summary-value">
+                    <span id="total-value" class="crypto-badge neutral">$0.00</span>
+                </div>
+            </div>
+            
+            <div class="summary-item">
+                <h3>Ganancia/Pérdida</h3>
+                <div class="summary-value">
+                    <span id="total-profit" class="crypto-badge neutral">$0.00</span>
+                </div>
+            </div>
+            
+            <div class="summary-item">
+                <h3>Rendimiento</h3>
+                <div class="summary-value">
+                    <span id="total-performance" class="crypto-badge neutral">0%</span>
+                </div>
+            </div>
+        </div>
+        
+        <h2>Agregar Nueva Transacción</h2>
+        <form id="transaction-form">
+            <div class="form-group">
+                <label for="crypto">Criptomoneda</label>
+                <select id="crypto" required>
+                    <option value="">Seleccionar...</option>
+                    <option value="BTC">Bitcoin (BTC)</option>
+                    <option value="ETH">Ethereum (ETH)</option>
+                    <option value="BNB">Binance Coin (BNB)</option>
+                    <option value="SOL">Solana (SOL)</option>
+                    <option value="XRP">Ripple (XRP)</option>
+                    <option value="ADA">Cardano (ADA)</option>
+                    <option value="DOT">Polkadot (DOT)</option>
+                    <option value="DOGE">Dogecoin (DOGE)</option>
+                    <option value="other">Otra</option>
+                </select>
+            </div>
+            
+            <div class="form-group" id="custom-crypto-group" style="display:none;">
+                <label for="custom-crypto">Nombre de la criptomoneda (símbolo)</label>
+                <input type="text" id="custom-crypto" placeholder="Ej: SHIB">
+            </div>
+            
+            <div class="form-group">
+                <label for="comprador">Comprador</label>
+                <input type="text" id="comprador" placeholder="Nombre de quien realizó la compra" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="amount">Cantidad</label>
+                <input type="number" id="amount" step="0.00000001" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="buy-price">Precio de compra (USD)</label>
+                <input type="number" id="buy-price" step="0.0001" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="fee">Comisión de compra (USD)</label>
+                <input type="number" id="fee" step="0.01" value="0">
+            </div>
+            
+            <div class="form-group">
+                <label for="date">Fecha de compra</label>
+                <input type="date" id="date" required>
+            </div>
+            
+            <button type="submit">Agregar al Portafolio</button>
+        </form>
+        
+        <h2>Detalle de tu Portafolio</h2>
+        <div class="portfolio-table-container">
+            <table id="portfolio-table">
+                <thead>
+                    <tr>
+                        <th>Criptomoneda</th>
+                        <th>Comprador</th>
+                        <th>Cantidad</th>
+                        <th>Precio Compra</th>
+                        <th>Inversión Total</th>
+                        <th>Precio Actual</th>
+                        <th>Valor Actual</th>
+                        <th>Ganancia/Perdida</th>
+                        <th>Rendimiento</th>
+                        <th>Comisiones</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Los datos se llenarán con JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="chart-container">
+            <h2>Distribución de tu Portafolio</h2>
+            <canvas id="portfolio-chart"></canvas>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Variables globales mejoradas
+        let portfolio = JSON.parse(localStorage.getItem('cryptoPortfolio')) || [];
+        let cryptoPrices = {};
+        let binanceSocket = null;
+        let subscribedSymbols = new Set();
+        let portfolioChart = null;
+        let heartbeatInterval = null;
+        let isReconnecting = false;
+        let reconnectAttempts = 0;
+        const MAX_RECONNECT_ATTEMPTS = 10;
+        const RECONNECT_DELAY_BASE = 3000;
+        const HEARTBEAT_INTERVAL = 25000;
+        const PONG_TIMEOUT = 5000;
+
+        // Elementos del DOM
+        const cryptoSelect = document.getElementById('crypto');
+        const customCryptoGroup = document.getElementById('custom-crypto-group');
+        const form = document.getElementById('transaction-form');
+        const portfolioTable = document.getElementById('portfolio-table').getElementsByTagName('tbody')[0];
+        const totalInvestmentElement = document.getElementById('total-investment');
+        const totalValueElement = document.getElementById('total-value');
+        const totalProfitElement = document.getElementById('total-profit');
+        const totalPerformanceElement = document.getElementById('total-performance');
+        const lastUpdatedElement = document.getElementById('last-updated');
+        const connectionStatusElement = document.getElementById('connection-status');
+        const importFileInput = document.getElementById('import-file');
+        
+        // Función para formatear cantidades según la criptomoneda
+        function formatCryptoAmount(amount, crypto) {
+            const decimals = {
+                'BTC': 8, 'ETH': 6, 'BNB': 4, 'SOL': 2,
+                'XRP': 0, 'ADA': 0, 'DOT': 2, 'DOGE': 0,
+                'default': 8
+            };
+            
+            const decimalPlaces = decimals[crypto] || decimals['default'];
+            const fixedAmount = parseFloat(amount.toFixed(decimalPlaces));
+            
+            return fixedAmount.toLocaleString('en-US', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: decimalPlaces,
+                useGrouping: true
+            });
+        }
+
+        // Función para formatear precios
+        function formatPrice(price, crypto) {
+            if (!price) return '0.00';
+            
+            if (price >= 1000) return price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            if (price >= 100) return price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 3});
+            if (price >= 10) return price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 4});
+            if (price >= 1) return price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 5});
+            if (price >= 0.1) return price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 6});
+            if (price >= 0.01) return price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 7});
+            return price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 8});
+        }
+
+        // Mostrar/ocultar campo para criptomoneda personalizada
+        cryptoSelect.addEventListener('change', function() {
+            customCryptoGroup.style.display = this.value === 'other' ? 'block' : 'none';
+        });
+        
+        // Manejar el envío del formulario
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const crypto = cryptoSelect.value === 'other' 
+                ? document.getElementById('custom-crypto').value.toUpperCase() 
+                : cryptoSelect.value;
+                
+            if (!crypto) {
+                alert('Por favor ingresa un símbolo de criptomoneda válido');
+                return;
+            }
+                
+            const transaction = {
+                id: Date.now(),
+                crypto: crypto,
+                comprador: document.getElementById('comprador').value,
+                amount: parseFloat(document.getElementById('amount').value),
+                buyPrice: parseFloat(document.getElementById('buy-price').value),
+                fee: parseFloat(document.getElementById('fee').value) || 0,
+                date: document.getElementById('date').value
+            };
+            
+            portfolio.push(transaction);
+            savePortfolio();
+            updatePortfolioDisplay();
+            form.reset();
+            
+            // Suscribir al símbolo si no está ya suscrito
+            if (!subscribedSymbols.has(crypto + 'USDT')) {
+                subscribeSymbols([crypto + 'USDT']);
+            }
+        });
+        
+        // Guardar portafolio en localStorage
+        function savePortfolio() {
+            localStorage.setItem('cryptoPortfolio', JSON.stringify(portfolio));
+            updateLastUpdated();
+        }
+        
+        // Exportar datos a archivo JSON
+        function exportData() {
+            const dataStr = JSON.stringify(portfolio, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `cripto-portfolio-${new Date().toISOString().split('T')[0]}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+        }
+        
+        // Importar datos desde archivo JSON
+        function importData() {
+            importFileInput.click();
+        }
+        
+        importFileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    if (Array.isArray(importedData)) {
+                        if (confirm(`¿Deseas importar ${importedData.length} transacciones? Esto reemplazará tu portafolio actual.`)) {
+                            portfolio = importedData;
+                            savePortfolio();
+                            updatePortfolioDisplay();
+                            
+                            // Reconectar para actualizar suscripciones
+                            if (binanceSocket) {
+                                binanceSocket.close();
+                            }
+                            connectWebSocket();
+                        }
+                    } else {
+                        alert('El archivo no contiene datos válidos');
+                    }
+                } catch (error) {
+                    alert('Error al leer el archivo: ' + error.message);
+                }
+                e.target.value = '';
+            };
+            reader.readAsText(file);
+        });
+        
+        // Actualizar la visualización del portafolio
+        function updatePortfolioDisplay() {
+            portfolioTable.innerHTML = '';
+            
+            let totalInvestment = 0;
+            let totalFees = 0;
+            let totalCurrentValue = 0;
+            let totalProfitLoss = 0;
+
+            if (portfolio.length === 0) {
+                const row = portfolioTable.insertRow();
+                row.innerHTML = `<td colspan="11" style="text-align: center;">No hay transacciones registradas</td>`;
+                
+                totalInvestmentElement.textContent = '$0.00';
+                totalValueElement.textContent = '$0.00';
+                totalProfitElement.textContent = '$0.00';
+                totalPerformanceElement.textContent = '0%';
+                
+                totalInvestmentElement.className = 'crypto-badge neutral';
+                totalValueElement.className = 'crypto-badge neutral';
+                totalProfitElement.className = 'crypto-badge neutral';
+                totalPerformanceElement.className = 'crypto-badge neutral';
+                
+                if (portfolioChart) {
+                    portfolioChart.data.labels = [];
+                    portfolioChart.data.datasets[0].data = [];
+                    portfolioChart.update();
+                }
+                return;
+            }
+
+            // Calcular totales
+            portfolio.forEach(item => {
+                const investment = item.amount * item.buyPrice;
+                totalInvestment += investment;
+                totalFees += item.fee;
+            });
+
+            // Mostrar cada transacción
+            portfolio.forEach(item => {
+                const currentPrice = cryptoPrices[item.crypto] || 0;
+                const investment = item.amount * item.buyPrice;
+                const currentValue = item.amount * currentPrice;
+                const fee = item.fee;
+                
+                const profitLoss = currentValue - investment - fee;
+                const performance = (profitLoss / (investment + fee)) * 100;
+                
+                totalCurrentValue += currentValue;
+                totalProfitLoss += profitLoss;
+
+                const row = portfolioTable.insertRow();
+                row.innerHTML = `
+                    <td><span class="crypto-badge">${item.crypto}</span></td>
+                    <td class="comprador-col">${item.comprador || '-'}</td>
+                    <td>${formatCryptoAmount(item.amount, item.crypto)}</td>
+                    <td>$${formatPrice(item.buyPrice, item.crypto)}</td>
+                    <td>$${(investment + fee).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                    <td>${currentPrice ? `$${formatPrice(currentPrice, item.crypto)}` : '<span class="loading">Cargando...</span>'}</td>
+                    <td>${currentPrice ? `$${currentValue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}` : '<span class="loading">Cargando...</span>'}</td>
+                    <td><span class="${profitLoss >= 0 ? 'positive' : 'negative'}">${currentPrice ? `$${profitLoss.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}` : '<span class="loading">Cargando...</span>'}</span></td>
+                    <td><span class="${performance >= 0 ? 'positive' : 'negative'}">${currentPrice ? `${performance.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}%` : '<span class="loading">Cargando...</span>'}</span></td>
+                    <td>$${fee.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                    <td><button class="btn-danger" onclick="deleteTransaction(${item.id})">Eliminar</button></td>
+                `;
+            });
+
+            // Actualizar resumen
+            const totalCost = totalInvestment + totalFees;
+            const totalPerformance = totalCost > 0 
+                ? ((totalCurrentValue / totalCost) - 1) * 100 
+                : 0;
+
+            totalInvestmentElement.textContent = `$${totalCost.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            
+            totalValueElement.textContent = `$${totalCurrentValue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            totalValueElement.className = totalCurrentValue >= totalCost ? 'positive' : 'negative';
+            
+            totalProfitElement.textContent = `$${totalProfitLoss.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            totalProfitElement.className = totalProfitLoss >= 0 ? 'positive' : 'negative';
+            
+            totalPerformanceElement.textContent = `${totalPerformance.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}%`;
+            totalPerformanceElement.className = totalPerformance >= 0 ? 'positive' : 'negative';
+
+            updateChart();
+        }
+        
+        // Eliminar transacción
+        function deleteTransaction(id) {
+            if (confirm('¿Estás seguro de que quieres eliminar esta transacción?')) {
+                portfolio = portfolio.filter(item => item.id !== id);
+                savePortfolio();
+                updatePortfolioDisplay();
+                updateSubscriptions();
+            }
+        }
+        
+        // Función para conectar/reconectar
+        function connectWebSocket() {
+            // Limpiar conexión existente
+            if (binanceSocket) {
+                try {
+                    binanceSocket.close();
+                } catch (e) {
+                    console.error('Error al cerrar conexión existente:', e);
+                }
+            }
+
+            // Verificar si hay datos para conectar
+            if (portfolio.length === 0) {
+                updateConnectionStatus('disconnected', 'Sin datos');
+                return;
+            }
+
+            // Verificar máximo de intentos
+            if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) {
+                console.error('Máximo de intentos de reconexión alcanzado');
+                updateConnectionStatus('error', 'Error de conexión');
+                return;
+            }
+
+            isReconnecting = true;
+            reconnectAttempts++;
+            
+            const delay = Math.min(RECONNECT_DELAY_BASE * Math.pow(1.5, reconnectAttempts - 1), 30000);
+            console.log(`Intento de conexión ${reconnectAttempts}/${MAX_RECONNECT_ATTEMPTS}. Esperando ${delay}ms...`);
+            updateConnectionStatus('connecting', 'Conectando...');
+
+            // Usar endpoints alternativos con prioridad
+            const endpoints = [
+                'wss://stream.binance.com:9443/ws',
+                'wss://stream.binance.com:443/ws',
+                'wss://stream.binance.us:9443/ws'
+            ];
+            const selectedEndpoint = endpoints[reconnectAttempts % endpoints.length];
+            
+            setTimeout(() => {
+                console.log(`Conectando a ${selectedEndpoint}...`);
+                binanceSocket = new WebSocket(selectedEndpoint);
+
+                // Configurar timeout de conexión
+                const connectionTimeout = setTimeout(() => {
+                    console.error('Timeout de conexión');
+                    binanceSocket.close();
+                }, 10000);
+
+                // Eventos del WebSocket
+                binanceSocket.onopen = () => {
+                    clearTimeout(connectionTimeout);
+                    console.log('Conexión establecida con Binance WebSocket');
+                    isReconnecting = false;
+                    reconnectAttempts = 0;
+                    updateConnectionStatus('connected', 'Conectado');
+                    setupHeartbeat();
+                    subscribeToAllSymbols();
+                };
+
+                binanceSocket.onmessage = (event) => {
+                    try {
+                        const message = JSON.parse(event.data);
+                        
+                        if (message.e === '24hrTicker') {
+                            handleTickerUpdate(message);
+                        } else if (message.id && message.result === null) {
+                            console.debug('PONG recibido');
+                        } else if (message.error) {
+                            console.error('Error del servidor:', message.error);
+                        }
+                    } catch (error) {
+                        console.error('Error al procesar mensaje:', error);
+                    }
+                };
+
+                binanceSocket.onclose = (event) => {
+                    clearTimeout(connectionTimeout);
+                    console.log(`Conexión cerrada. Código: ${event.code}, Razón: ${event.reason}`);
+                    updateConnectionStatus('disconnected', 'Desconectado');
+                    
+                    if (event.code !== 1000 && !isReconnecting) {
+                        console.log('Programando reconexión...');
+                        setTimeout(connectWebSocket, delay);
+                    }
+                };
+
+                binanceSocket.onerror = (error) => {
+                    console.error('Error en WebSocket:', error);
+                    clearTimeout(connectionTimeout);
+                };
+            }, delay);
+        }
+
+        // Función para manejar actualizaciones de ticker
+        function handleTickerUpdate(message) {
+            const symbol = message.s;
+            const crypto = symbol.replace('USDT', '');
+            const price = parseFloat(message.c);
+            
+            cryptoPrices[crypto] = price;
+            updatePortfolioDisplay();
+            updateLastUpdated();
+        }
+
+        // Función para actualizar el estado de conexión
+        function updateConnectionStatus(status, text) {
+            connectionStatusElement.textContent = text;
+            connectionStatusElement.className = `connection-status ${status}`;
+        }
+
+        // Configuración del heartbeat mejorado
+        function setupHeartbeat() {
+            clearInterval(heartbeatInterval);
+            let missedPongs = 0;
+            const maxMissedPongs = 3;
+
+            heartbeatInterval = setInterval(() => {
+                if (binanceSocket && binanceSocket.readyState === WebSocket.OPEN) {
+                    const pingId = Date.now();
+                    
+                    const pongTimeout = setTimeout(() => {
+                        missedPongs++;
+                        console.warn(`PONG no recibido (${missedPongs}/${maxMissedPongs})`);
+                        
+                        if (missedPongs >= maxMissedPongs) {
+                            console.error('Demasiados PONGs perdidos, reconectando...');
+                            clearTimeout(pongTimeout);
+                            binanceSocket.close();
+                        }
+                    }, PONG_TIMEOUT);
+
+                    try {
+                        binanceSocket.send(JSON.stringify({
+                            method: 'PING',
+                            id: pingId
+                        }));
+
+                        const pongListener = (event) => {
+                            try {
+                                const message = JSON.parse(event.data);
+                                if (message.id === pingId && message.result === null) {
+                                    clearTimeout(pongTimeout);
+                                    missedPongs = 0;
+                                    binanceSocket.removeEventListener('message', pongListener);
+                                }
+                            } catch (e) {
+                                console.error('Error al procesar PONG:', e);
+                            }
+                        };
+                        
+                        binanceSocket.addEventListener('message', pongListener);
+                    } catch (error) {
+                        console.error('Error al enviar PING:', error);
+                        clearTimeout(pongTimeout);
+                    }
+                }
+            }, HEARTBEAT_INTERVAL);
+        }
+
+        // Suscripción a símbolos con manejo de lotes
+        function subscribeToAllSymbols() {
+            if (!binanceSocket || binanceSocket.readyState !== WebSocket.OPEN) {
+                console.error('WebSocket no listo para suscripciones');
+                return;
+            }
+
+            const symbols = [...new Set(portfolio.map(item => item.crypto + 'USDT'))];
+            if (symbols.length === 0) return;
+
+            // Dividir en lotes de 100 símbolos (límite de Binance)
+            const batchSize = 100;
+            for (let i = 0; i < symbols.length; i += batchSize) {
+                const batch = symbols.slice(i, i + batchSize);
+                setTimeout(() => {
+                    try {
+                        binanceSocket.send(JSON.stringify({
+                            method: 'SUBSCRIBE',
+                            params: batch.map(s => `${s.toLowerCase()}@ticker`),
+                            id: Date.now() + i
+                        }));
+                        
+                        batch.forEach(s => subscribedSymbols.add(s));
+                        console.log(`Suscrito a lote con ${batch.length} símbolos`);
+                    } catch (error) {
+                        console.error('Error al suscribir lote:', error);
+                    }
+                }, i * 300); // Pequeño retraso entre lotes
+            }
+        }
+
+        // Actualización de suscripciones optimizada
+        function updateSubscriptions() {
+            if (!binanceSocket || binanceSocket.readyState !== WebSocket.OPEN) return;
+
+            const currentSymbols = new Set(portfolio.map(item => item.crypto + 'USDT'));
+            const toUnsubscribe = [...subscribedSymbols].filter(s => !currentSymbols.has(s));
+            const toSubscribe = [...currentSymbols].filter(s => !subscribedSymbols.has(s));
+
+            // Manejar desuscripciones
+            unsubscribeSymbols(toUnsubscribe);
+            
+            // Manejar suscripciones
+            subscribeSymbols(toSubscribe);
+        }
+
+        function unsubscribeSymbols(symbols) {
+            if (symbols.length === 0) return;
+
+            const batchSize = 100;
+            for (let i = 0; i < symbols.length; i += batchSize) {
+                const batch = symbols.slice(i, i + batchSize);
+                setTimeout(() => {
+                    try {
+                        binanceSocket.send(JSON.stringify({
+                            method: 'UNSUBSCRIBE',
+                            params: batch.map(s => `${s.toLowerCase()}@ticker`),
+                            id: Date.now() + i + 1000
+                        }));
+                        
+                        batch.forEach(s => subscribedSymbols.delete(s));
+                    } catch (error) {
+                        console.error('Error al desuscribir lote:', error);
+                    }
+                }, i * 300);
+            }
+        }
+
+        function subscribeSymbols(symbols) {
+            if (symbols.length === 0) return;
+
+            const batchSize = 100;
+            for (let i = 0; i < symbols.length; i += batchSize) {
+                const batch = symbols.slice(i, i + batchSize);
+                setTimeout(() => {
+                    try {
+                        binanceSocket.send(JSON.stringify({
+                            method: 'SUBSCRIBE',
+                            params: batch.map(s => `${s.toLowerCase()}@ticker`),
+                            id: Date.now() + i + 2000
+                        }));
+                        
+                        batch.forEach(s => subscribedSymbols.add(s));
+                    } catch (error) {
+                        console.error('Error al suscribir lote:', error);
+                    }
+                }, i * 300);
+            }
+        }
+
+        // Actualizar gráfico
+        function updateChart() {
+            const ctx = document.getElementById('portfolio-chart');
+            
+            const cryptoGroups = {};
+            portfolio.forEach(item => {
+                if (!cryptoGroups[item.crypto]) {
+                    cryptoGroups[item.crypto] = {
+                        amount: 0,
+                        currentValue: 0
+                    };
+                }
+                cryptoGroups[item.crypto].amount += item.amount;
+                cryptoGroups[item.crypto].currentValue += item.amount * (cryptoPrices[item.crypto] || 0);
+            });
+            
+            const labels = Object.keys(cryptoGroups);
+            const data = labels.map(crypto => cryptoGroups[crypto].currentValue);
+            
+            if (!portfolioChart) {
+                portfolioChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: data,
+                            backgroundColor: [
+                                '#3498db', '#2ecc71', '#e74c3c', '#f39c12', 
+                                '#1abc9c', '#9b59b6', '#34495e', '#e67e22',
+                                '#27ae60', '#d35400', '#2c3e50', '#16a085'
+                            ],
+                            borderWidth: 1,
+                            borderColor: '#fff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                                onClick: null,
+                                labels: {
+                                    font: {
+                                        family: 'Roboto',
+                                        size: 14
+                                    },
+                                    padding: 20
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.label || '';
+                                        const value = context.raw || 0;
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = Math.round((value / total) * 100);
+                                        return `${label}: $${value.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} (${percentage}%)`;
+                                    }
+                                }
+                            }
+                        },
+                        animation: {
+                            animateScale: false,
+                            animateRotate: false
+                        },
+                        cutout: '65%'
+                    }
+                });
+            } else {
+                portfolioChart.data.labels = labels;
+                portfolioChart.data.datasets[0].data = data;
+                portfolioChart.update();
+            }
+        }
+        
+        // Actualizar marca de tiempo
+        function updateLastUpdated() {
+            const now = new Date();
+            lastUpdatedElement.textContent = `Última actualización: ${now.toLocaleString()}`;
+        }
+        
+        // Inicialización mejorada
+        function init() {
+            document.getElementById('date').valueAsDate = new Date();
+            updatePortfolioDisplay();
+            
+            // Verificar si hay datos antes de conectar
+            if (portfolio.length > 0) {
+                connectWebSocket();
+            } else {
+                // Intentar cargar datos guardados
+                const savedData = localStorage.getItem('cryptoPortfolio');
+                if (savedData && JSON.parse(savedData).length > 0) {
+                    portfolio = JSON.parse(savedData);
+                    updatePortfolioDisplay();
+                    connectWebSocket();
+                }
+            }
+            
+            // Reconectar automáticamente si la conexión se pierde
+            window.addEventListener('online', () => {
+                if (!binanceSocket || binanceSocket.readyState !== WebSocket.OPEN) {
+                    connectWebSocket();
+                }
+            });
+        }
+
+        // Iniciar cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

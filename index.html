@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portafolio Cripto Avanzado</title>
+    <title>Portafolio de Inversión</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary: #3498db;
@@ -129,18 +130,6 @@
         #portfolio-table tr:last-child td {
             border-bottom: none;
         }
-        
-        #portfolio-table th:nth-child(1), #portfolio-table td:nth-child(1) { width: 150px; }
-        #portfolio-table th:nth-child(2), #portfolio-table td:nth-child(2) { width: 150px; }
-        #portfolio-table th:nth-child(3), #portfolio-table td:nth-child(3) { width: 120px; }
-        #portfolio-table th:nth-child(4), #portfolio-table td:nth-child(4) { width: 150px; }
-        #portfolio-table th:nth-child(5), #portfolio-table td:nth-child(5) { width: 150px; }
-        #portfolio-table th:nth-child(6), #portfolio-table td:nth-child(6) { width: 150px; }
-        #portfolio-table th:nth-child(7), #portfolio-table td:nth-child(7) { width: 150px; }
-        #portfolio-table th:nth-child(8), #portfolio-table td:nth-child(8) { width: 180px; }
-        #portfolio-table th:nth-child(9), #portfolio-table td:nth-child(9) { width: 150px; }
-        #portfolio-table th:nth-child(10), #portfolio-table td:nth-child(10) { width: 150px; }
-        #portfolio-table th:nth-child(11), #portfolio-table td:nth-child(11) { width: 150px; }
         
         .positive {
             color: var(--positive-text);
@@ -358,7 +347,20 @@
             font-size: 14px;
             min-width: 100px;
             text-align: center;
-            background-color: rgba(255,255,255,0.1);
+            background-color: rgba(46, 204, 113, 0.2);
+            border-left: 3px solid var(--secondary);
+        }
+        
+        .stock-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 14px;
+            min-width: 100px;
+            text-align: center;
+            background-color: rgba(52, 152, 219, 0.2);
+            border-left: 3px solid var(--primary);
         }
         
         .comprador-col {
@@ -372,6 +374,61 @@
         
         .btn-danger:hover {
             background-color: #c0392b;
+        }
+        
+        .asset-section {
+            transition: all 0.3s ease;
+        }
+        
+        .type-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+        
+        .type-crypto {
+            background-color: rgba(46, 204, 113, 0.1);
+            color: var(--secondary);
+        }
+        
+        .type-stock {
+            background-color: rgba(52, 152, 219, 0.1);
+            color: var(--primary);
+        }
+        
+        .summary-table-container {
+            width: 100%;
+            margin: 25px 0;
+            border-radius: 10px;
+            overflow-x: auto;
+            background: var(--table-bg);
+            border: 1px solid var(--table-border);
+        }
+        
+        #summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--table-bg);
+        }
+        
+        #summary-table th {
+            background: var(--table-header-bg);
+            color: var(--lighter);
+            font-weight: 500;
+            text-align: left;
+            padding: 15px;
+            position: sticky;
+            top: 0;
+            border-bottom: 2px solid var(--table-border);
+        }
+        
+        #summary-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--table-border);
+            color: var(--text-color);
         }
         
         @media (max-width: 1200px) {
@@ -422,20 +479,20 @@
     <div class="container">
         <div class="header-container">
             <h1>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2L4 7L12 12L20 7L12 2Z" fill="#3498db"/>
-                    <path d="M4 12L12 17L20 12" stroke="#3498db" stroke-width="2" stroke-linecap="round"/>
-                    <path d="M4 17L12 22L20 17" stroke="#3498db" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-                Portafolio Cripto 
+                <i class="fas fa-coins"></i>
+                Portafolio de Inversión 
                 <span id="connection-status" class="connection-status disconnected">Desconectado</span>
             </h1>
             <div class="last-updated" id="last-updated">Última actualización: Nunca</div>
         </div>
         
         <div class="backup-section">
-            <button class="backup-btn export" onclick="exportData()">Exportar</button>
-            <button class="backup-btn import" onclick="importData()">Importar</button>
+            <button class="backup-btn export" onclick="exportData()">
+                <i class="fas fa-file-export"></i> Exportar
+            </button>
+            <button class="backup-btn import" onclick="importData()">
+                <i class="fas fa-file-import"></i> Importar
+            </button>
             <input type="file" id="import-file" accept=".json">
         </div>
         
@@ -443,28 +500,42 @@
             <div class="summary-item">
                 <h3>Inversión Total</h3>
                 <div class="summary-value">
-                    <span id="total-investment" class="crypto-badge neutral">$0.00</span>
+                    <span id="total-investment" class="neutral">$0.00</span>
                 </div>
             </div>
             
             <div class="summary-item">
                 <h3>Valor Actual</h3>
                 <div class="summary-value">
-                    <span id="total-value" class="crypto-badge neutral">$0.00</span>
+                    <span id="total-value" class="neutral">$0.00</span>
                 </div>
             </div>
             
             <div class="summary-item">
                 <h3>Ganancia/Pérdida</h3>
                 <div class="summary-value">
-                    <span id="total-profit" class="crypto-badge neutral">$0.00</span>
+                    <span id="total-profit" class="neutral">$0.00</span>
                 </div>
             </div>
             
             <div class="summary-item">
                 <h3>Rendimiento</h3>
                 <div class="summary-value">
-                    <span id="total-performance" class="crypto-badge neutral">0%</span>
+                    <span id="total-performance" class="neutral">0%</span>
+                </div>
+            </div>
+            
+            <div class="summary-item">
+                <h3>Cripto</h3>
+                <div class="summary-value">
+                    <span id="crypto-value" class="neutral">$0.00</span>
+                </div>
+            </div>
+            
+            <div class="summary-item">
+                <h3>Acciones</h3>
+                <div class="summary-value">
+                    <span id="stock-value" class="neutral">$0.00</span>
                 </div>
             </div>
         </div>
@@ -472,24 +543,67 @@
         <h2>Agregar Nueva Transacción</h2>
         <form id="transaction-form">
             <div class="form-group">
-                <label for="crypto">Criptomoneda</label>
-                <select id="crypto" required>
+                <label for="asset-type">Tipo de Activo</label>
+                <select id="asset-type" required>
                     <option value="">Seleccionar...</option>
-                    <option value="BTC">Bitcoin (BTC)</option>
-                    <option value="ETH">Ethereum (ETH)</option>
-                    <option value="BNB">Binance Coin (BNB)</option>
-                    <option value="SOL">Solana (SOL)</option>
-                    <option value="XRP">Ripple (XRP)</option>
-                    <option value="ADA">Cardano (ADA)</option>
-                    <option value="DOT">Polkadot (DOT)</option>
-                    <option value="DOGE">Dogecoin (DOGE)</option>
-                    <option value="other">Otra</option>
+                    <option value="crypto">Criptomoneda</option>
+                    <option value="stock">Acción</option>
                 </select>
             </div>
             
-            <div class="form-group" id="custom-crypto-group" style="display:none;">
-                <label for="custom-crypto">Nombre de la criptomoneda (símbolo)</label>
-                <input type="text" id="custom-crypto" placeholder="Ej: SHIB">
+            <div id="crypto-section" class="asset-section">
+                <div class="form-group">
+                    <label for="crypto">Criptomoneda</label>
+                    <select id="crypto">
+                        <option value="">Seleccionar...</option>
+                        <option value="BTC">Bitcoin (BTC)</option>
+                        <option value="ETH">Ethereum (ETH)</option>
+                        <option value="BNB">Binance Coin (BNB)</option>
+                        <option value="SOL">Solana (SOL)</option>
+                        <option value="XRP">Ripple (XRP)</option>
+                        <option value="ADA">Cardano (ADA)</option>
+                        <option value="DOT">Polkadot (DOT)</option>
+                        <option value="DOGE">Dogecoin (DOGE)</option>
+                        <option value="other">Otra</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" id="custom-crypto-group" style="display:none;">
+                    <label for="custom-crypto">Nombre de la criptomoneda (símbolo)</label>
+                    <input type="text" id="custom-crypto" placeholder="Ej: SHIB">
+                </div>
+            </div>
+            
+            <div id="stock-section" class="asset-section" style="display:none;">
+                <div class="form-group">
+                    <label for="stock">Acción</label>
+                    <select id="stock">
+                        <option value="">Seleccionar...</option>
+                        <option value="AAPL">Apple (AAPL)</option>
+                        <option value="MSFT">Microsoft (MSFT)</option>
+                        <option value="GOOGL">Alphabet (GOOGL)</option>
+                        <option value="AMZN">Amazon (AMZN)</option>
+                        <option value="TSLA">Tesla (TSLA)</option>
+                        <option value="NVDA">NVIDIA (NVDA)</option>
+                        <option value="META">Meta (META)</option>
+                        <option value="other">Otra</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" id="custom-stock-group" style="display:none;">
+                    <label for="custom-stock">Nombre de la acción (símbolo)</label>
+                    <input type="text" id="custom-stock" placeholder="Ej: AMD">
+                </div>
+                
+                <div class="form-group">
+                    <label for="stock-exchange">Bolsa de Valores</label>
+                    <select id="stock-exchange">
+                        <option value="NASDAQ">NASDAQ</option>
+                        <option value="NYSE">NYSE</option>
+                        <option value="BME">BME</option>
+                        <option value="other">Otra</option>
+                    </select>
+                </div>
             </div>
             
             <div class="form-group">
@@ -520,12 +634,32 @@
             <button type="submit">Agregar al Portafolio</button>
         </form>
         
-        <h2>Detalle de tu Portafolio</h2>
+        <h2>Resumen por Activo</h2>
+        <div class="summary-table-container">
+            <table id="summary-table">
+                <thead>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Activo</th>
+                        <th>Cantidad Total</th>
+                        <th>Inversión Total</th>
+                        <th>Valor Actual</th>
+                        <th>Ganancia/Pérdida</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Los datos se llenarán con JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        
+        <h2>Detalle de Transacciones</h2>
         <div class="portfolio-table-container">
             <table id="portfolio-table">
                 <thead>
                     <tr>
-                        <th>Criptomoneda</th>
+                        <th>Tipo</th>
+                        <th>Activo</th>
                         <th>Comprador</th>
                         <th>Cantidad</th>
                         <th>Precio Compra</th>
@@ -552,90 +686,88 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Variables globales mejoradas
-        let portfolio = JSON.parse(localStorage.getItem('cryptoPortfolio')) || [];
+        // Variables globales
+        let portfolio = JSON.parse(localStorage.getItem('investmentPortfolio')) || [];
         let cryptoPrices = {};
+        let stockPrices = {};
         let binanceSocket = null;
-        let subscribedSymbols = new Set();
         let portfolioChart = null;
-        let heartbeatInterval = null;
-        let isReconnecting = false;
-        let reconnectAttempts = 0;
-        const MAX_RECONNECT_ATTEMPTS = 10;
-        const RECONNECT_DELAY_BASE = 3000;
-        const HEARTBEAT_INTERVAL = 25000;
-        const PONG_TIMEOUT = 5000;
-
+        let subscribedSymbols = new Set();
+        
         // Elementos del DOM
+        const assetTypeSelect = document.getElementById('asset-type');
+        const cryptoSection = document.getElementById('crypto-section');
+        const stockSection = document.getElementById('stock-section');
         const cryptoSelect = document.getElementById('crypto');
         const customCryptoGroup = document.getElementById('custom-crypto-group');
+        const stockSelect = document.getElementById('stock');
+        const customStockGroup = document.getElementById('custom-stock-group');
         const form = document.getElementById('transaction-form');
         const portfolioTable = document.getElementById('portfolio-table').getElementsByTagName('tbody')[0];
+        const summaryTable = document.getElementById('summary-table').getElementsByTagName('tbody')[0];
         const totalInvestmentElement = document.getElementById('total-investment');
         const totalValueElement = document.getElementById('total-value');
         const totalProfitElement = document.getElementById('total-profit');
         const totalPerformanceElement = document.getElementById('total-performance');
+        const cryptoValueElement = document.getElementById('crypto-value');
+        const stockValueElement = document.getElementById('stock-value');
         const lastUpdatedElement = document.getElementById('last-updated');
         const connectionStatusElement = document.getElementById('connection-status');
         const importFileInput = document.getElementById('import-file');
-        
-        // Función para formatear cantidades según la criptomoneda
-        function formatCryptoAmount(amount, crypto) {
-            const decimals = {
-                'BTC': 8, 'ETH': 6, 'BNB': 4, 'SOL': 2,
-                'XRP': 0, 'ADA': 0, 'DOT': 2, 'DOGE': 0,
-                'default': 8
-            };
-            
-            const decimalPlaces = decimals[crypto] || decimals['default'];
-            const fixedAmount = parseFloat(amount.toFixed(decimalPlaces));
-            
-            return fixedAmount.toLocaleString('en-US', {
-                minimumFractionDigits: 0,
-                maximumFractionDigits: decimalPlaces,
-                useGrouping: true
-            });
-        }
 
-        // Función para formatear precios
-        function formatPrice(price, crypto) {
-            if (!price) return '0.00';
-            
-            if (price >= 1000) return price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-            if (price >= 100) return price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 3});
-            if (price >= 10) return price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 4});
-            if (price >= 1) return price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 5});
-            if (price >= 0.1) return price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 6});
-            if (price >= 0.01) return price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 7});
-            return price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 8});
-        }
+        // Mostrar/ocultar secciones según tipo de activo
+        assetTypeSelect.addEventListener('change', function() {
+            cryptoSection.style.display = this.value === 'crypto' ? 'block' : 'none';
+            stockSection.style.display = this.value === 'stock' ? 'block' : 'none';
+        });
 
-        // Mostrar/ocultar campo para criptomoneda personalizada
+        // Mostrar campo para criptomoneda personalizada
         cryptoSelect.addEventListener('change', function() {
             customCryptoGroup.style.display = this.value === 'other' ? 'block' : 'none';
+        });
+        
+        // Mostrar campo para acción personalizada
+        stockSelect.addEventListener('change', function() {
+            customStockGroup.style.display = this.value === 'other' ? 'block' : 'none';
         });
         
         // Manejar el envío del formulario
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const crypto = cryptoSelect.value === 'other' 
-                ? document.getElementById('custom-crypto').value.toUpperCase() 
-                : cryptoSelect.value;
-                
-            if (!crypto) {
-                alert('Por favor ingresa un símbolo de criptomoneda válido');
+            const assetType = assetTypeSelect.value;
+            let assetSymbol, assetName;
+            
+            if (assetType === 'crypto') {
+                assetSymbol = cryptoSelect.value === 'other' 
+                    ? document.getElementById('custom-crypto').value.toUpperCase() 
+                    : cryptoSelect.value;
+                assetName = assetSymbol;
+            } else if (assetType === 'stock') {
+                assetSymbol = stockSelect.value === 'other' 
+                    ? document.getElementById('custom-stock').value.toUpperCase() 
+                    : stockSelect.value;
+                assetName = assetSymbol;
+            } else {
+                alert('Por favor selecciona un tipo de activo');
                 return;
             }
-                
+            
+            if (!assetSymbol) {
+                alert('Por favor ingresa un símbolo válido');
+                return;
+            }
+            
             const transaction = {
                 id: Date.now(),
-                crypto: crypto,
+                type: assetType,
+                asset: assetSymbol,
                 comprador: document.getElementById('comprador').value,
                 amount: parseFloat(document.getElementById('amount').value),
                 buyPrice: parseFloat(document.getElementById('buy-price').value),
                 fee: parseFloat(document.getElementById('fee').value) || 0,
-                date: document.getElementById('date').value
+                date: document.getElementById('date').value,
+                exchange: assetType === 'stock' ? document.getElementById('stock-exchange').value : 'Binance'
             };
             
             portfolio.push(transaction);
@@ -643,15 +775,17 @@
             updatePortfolioDisplay();
             form.reset();
             
-            // Suscribir al símbolo si no está ya suscrito
-            if (!subscribedSymbols.has(crypto + 'USDT')) {
-                subscribeSymbols([crypto + 'USDT']);
+            // Actualizar precios según el tipo de activo
+            if (assetType === 'crypto') {
+                subscribeToCrypto(assetSymbol);
+            } else {
+                fetchStockPrice(assetSymbol);
             }
         });
         
         // Guardar portafolio en localStorage
         function savePortfolio() {
-            localStorage.setItem('cryptoPortfolio', JSON.stringify(portfolio));
+            localStorage.setItem('investmentPortfolio', JSON.stringify(portfolio));
             updateLastUpdated();
         }
         
@@ -660,7 +794,7 @@
             const dataStr = JSON.stringify(portfolio, null, 2);
             const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
             
-            const exportFileDefaultName = `cripto-portfolio-${new Date().toISOString().split('T')[0]}.json`;
+            const exportFileDefaultName = `investment-portfolio-${new Date().toISOString().split('T')[0]}.json`;
             
             const linkElement = document.createElement('a');
             linkElement.setAttribute('href', dataUri);
@@ -692,6 +826,13 @@
                                 binanceSocket.close();
                             }
                             connectWebSocket();
+                            
+                            // Actualizar precios de acciones
+                            portfolio.forEach(item => {
+                                if (item.type === 'stock' && !stockPrices[item.asset]) {
+                                    fetchStockPrice(item.asset);
+                                }
+                            });
                         }
                     } else {
                         alert('El archivo no contiene datos válidos');
@@ -704,371 +845,311 @@
             reader.readAsText(file);
         });
         
+        // Función para obtener precios de acciones
+        async function fetchStockPrice(symbol) {
+            try {
+                // Usando Yahoo Finance como fuente principal
+                const response = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${symbol}`);
+                const data = await response.json();
+                
+                if (data.chart && data.chart.result && data.chart.result[0]) {
+                    const price = data.chart.result[0].meta.regularMarketPrice;
+                    stockPrices[symbol] = price;
+                    updatePortfolioDisplay();
+                    updateLastUpdated();
+                    
+                    // Actualizar cada 5 minutos (las APIs de acciones suelen tener límites)
+                    setTimeout(() => fetchStockPrice(symbol), 300000);
+                } else {
+                    // Si falla Yahoo Finance, intentar con Alpha Vantage
+                    await fetchStockPriceBackup(symbol);
+                }
+            } catch (error) {
+                console.error('Error al obtener precio de la acción:', error);
+                // Intentar con Alpha Vantage como respaldo
+                await fetchStockPriceBackup(symbol);
+            }
+        }
+        
+        // Función de respaldo para obtener precios de acciones
+        async function fetchStockPriceBackup(symbol) {
+            try {
+                // Nota: Necesitarías una API key real para Alpha Vantage
+                const response = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=TU_API_KEY`);
+                const data = await response.json();
+                
+                if (data['Global Quote']) {
+                    const price = parseFloat(data['Global Quote']['05. price']);
+                    stockPrices[symbol] = price;
+                    updatePortfolioDisplay();
+                    updateLastUpdated();
+                }
+            } catch (error) {
+                console.error('Error al obtener precio de respaldo:', error);
+            }
+        }
+        
+        // Función para conectar WebSocket a Binance (para criptomonedas)
+        function connectWebSocket() {
+            // Cerrar conexión existente si hay una
+            if (binanceSocket) {
+                binanceSocket.close();
+            }
+            
+            binanceSocket = new WebSocket('wss://stream.binance.com:9443/ws');
+            
+            binanceSocket.onopen = () => {
+                console.log('Conexión establecida con Binance WebSocket');
+                connectionStatusElement.textContent = 'Conectado';
+                connectionStatusElement.className = 'connection-status connected';
+                subscribeToAllCryptoSymbols();
+            };
+            
+            binanceSocket.onmessage = (event) => {
+                try {
+                    const message = JSON.parse(event.data);
+                    
+                    if (message.e === '24hrTicker') {
+                        const symbol = message.s.replace('USDT', '');
+                        const price = parseFloat(message.c);
+                        cryptoPrices[symbol] = price;
+                        updatePortfolioDisplay();
+                        updateLastUpdated();
+                    }
+                } catch (error) {
+                    console.error('Error al procesar mensaje:', error);
+                }
+            };
+            
+            binanceSocket.onerror = (error) => {
+                console.error('Error en WebSocket:', error);
+                connectionStatusElement.textContent = 'Error';
+                connectionStatusElement.className = 'connection-status error';
+            };
+            
+            binanceSocket.onclose = () => {
+                console.log('Conexión cerrada');
+                connectionStatusElement.textContent = 'Desconectado';
+                connectionStatusElement.className = 'connection-status disconnected';
+                // Intentar reconectar después de 5 segundos
+                setTimeout(connectWebSocket, 5000);
+            };
+        }
+        
+        // Suscribir a todas las criptomonedas en el portafolio
+        function subscribeToAllCryptoSymbols() {
+            if (!binanceSocket || binanceSocket.readyState !== WebSocket.OPEN) return;
+            
+            const symbols = [...new Set(
+                portfolio.filter(item => item.type === 'crypto').map(item => item.asset + 'USDT')
+            )];
+            
+            if (symbols.length === 0) return;
+            
+            binanceSocket.send(JSON.stringify({
+                method: 'SUBSCRIBE',
+                params: symbols.map(s => `${s.toLowerCase()}@ticker`),
+                id: Date.now()
+            }));
+            
+            symbols.forEach(s => subscribedSymbols.add(s));
+        }
+        
+        // Suscribir a una criptomoneda específica
+        function subscribeToCrypto(symbol) {
+            const fullSymbol = symbol + 'USDT';
+            
+            if (subscribedSymbols.has(fullSymbol) || !binanceSocket || binanceSocket.readyState !== WebSocket.OPEN) return;
+            
+            binanceSocket.send(JSON.stringify({
+                method: 'SUBSCRIBE',
+                params: [`${fullSymbol.toLowerCase()}@ticker`],
+                id: Date.now()
+            }));
+            
+            subscribedSymbols.add(fullSymbol);
+        }
+        
         // Actualizar la visualización del portafolio
         function updatePortfolioDisplay() {
             portfolioTable.innerHTML = '';
+            summaryTable.innerHTML = '';
             
-            let totalInvestment = 0;
-            let totalFees = 0;
-            let totalCurrentValue = 0;
-            let totalProfitLoss = 0;
-
             if (portfolio.length === 0) {
-                const row = portfolioTable.insertRow();
-                row.innerHTML = `<td colspan="11" style="text-align: center;">No hay transacciones registradas</td>`;
-                
-                totalInvestmentElement.textContent = '$0.00';
-                totalValueElement.textContent = '$0.00';
-                totalProfitElement.textContent = '$0.00';
-                totalPerformanceElement.textContent = '0%';
-                
-                totalInvestmentElement.className = 'crypto-badge neutral';
-                totalValueElement.className = 'crypto-badge neutral';
-                totalProfitElement.className = 'crypto-badge neutral';
-                totalPerformanceElement.className = 'crypto-badge neutral';
-                
-                if (portfolioChart) {
-                    portfolioChart.data.labels = [];
-                    portfolioChart.data.datasets[0].data = [];
-                    portfolioChart.update();
-                }
+                portfolioTable.innerHTML = '<tr><td colspan="12" style="text-align: center;">No hay transacciones registradas</td></tr>';
+                summaryTable.innerHTML = '<tr><td colspan="6" style="text-align: center;">No hay activos en el portafolio</td></tr>';
+                updateSummaryValues(0, 0, 0, 0, 0);
                 return;
             }
-
+            
             // Calcular totales
+            let totalInvestment = 0;
+            let totalCurrentValue = 0;
+            let totalFees = 0;
+            let cryptoInvestment = 0;
+            let cryptoCurrentValue = 0;
+            let stockInvestment = 0;
+            let stockCurrentValue = 0;
+            
+            // Objeto para resumen por activo
+            const assetSummary = {};
+            
+            // Procesar cada transacción
             portfolio.forEach(item => {
-                const investment = item.amount * item.buyPrice;
-                totalInvestment += investment;
-                totalFees += item.fee;
-            });
-
-            // Mostrar cada transacción
-            portfolio.forEach(item => {
-                const currentPrice = cryptoPrices[item.crypto] || 0;
-                const investment = item.amount * item.buyPrice;
-                const currentValue = item.amount * currentPrice;
-                const fee = item.fee;
+                const currentPrice = item.type === 'crypto' 
+                    ? cryptoPrices[item.asset] 
+                    : stockPrices[item.asset];
                 
+                const investment = item.amount * item.buyPrice;
+                const currentValue = item.amount * (currentPrice || 0);
+                const fee = item.fee || 0;
                 const profitLoss = currentValue - investment - fee;
                 const performance = (profitLoss / (investment + fee)) * 100;
                 
+                // Acumular totales generales
+                totalInvestment += investment + fee;
                 totalCurrentValue += currentValue;
-                totalProfitLoss += profitLoss;
-
+                totalFees += fee;
+                
+                // Acumular por tipo de activo
+                if (item.type === 'crypto') {
+                    cryptoInvestment += investment + fee;
+                    cryptoCurrentValue += currentValue;
+                } else {
+                    stockInvestment += investment + fee;
+                    stockCurrentValue += currentValue;
+                }
+                
+                // Agregar fila a la tabla de transacciones
                 const row = portfolioTable.insertRow();
                 row.innerHTML = `
-                    <td><span class="crypto-badge">${item.crypto}</span></td>
+                    <td><span class="type-badge type-${item.type}">${item.type === 'crypto' ? 'Crypto' : 'Stock'}</span></td>
+                    <td><span class="${item.type === 'crypto' ? 'crypto-badge' : 'stock-badge'}">${item.asset}</span></td>
                     <td class="comprador-col">${item.comprador || '-'}</td>
-                    <td>${formatCryptoAmount(item.amount, item.crypto)}</td>
-                    <td>$${formatPrice(item.buyPrice, item.crypto)}</td>
-                    <td>$${(investment + fee).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-                    <td>${currentPrice ? `$${formatPrice(currentPrice, item.crypto)}` : '<span class="loading">Cargando...</span>'}</td>
-                    <td>${currentPrice ? `$${currentValue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}` : '<span class="loading">Cargando...</span>'}</td>
-                    <td><span class="${profitLoss >= 0 ? 'positive' : 'negative'}">${currentPrice ? `$${profitLoss.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}` : '<span class="loading">Cargando...</span>'}</span></td>
-                    <td><span class="${performance >= 0 ? 'positive' : 'negative'}">${currentPrice ? `${performance.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}%` : '<span class="loading">Cargando...</span>'}</span></td>
-                    <td>$${fee.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                    <td>${item.type === 'crypto' ? formatCryptoAmount(item.amount, item.asset) : item.amount.toFixed(4)}</td>
+                    <td>$${item.buyPrice.toFixed(4)}</td>
+                    <td>$${(investment + fee).toFixed(2)}</td>
+                    <td>${currentPrice ? `$${currentPrice.toFixed(4)}` : '<span class="loading">Cargando...</span>'}</td>
+                    <td>${currentPrice ? `$${currentValue.toFixed(2)}` : '<span class="loading">Cargando...</span>'}</td>
+                    <td><span class="${profitLoss >= 0 ? 'positive' : 'negative'}">${currentPrice ? `$${profitLoss.toFixed(2)}` : '<span class="loading">Cargando...</span>'}</span></td>
+                    <td><span class="${performance >= 0 ? 'positive' : 'negative'}">${currentPrice ? `${performance.toFixed(2)}%` : '<span class="loading">Cargando...</span>'}</span></td>
+                    <td>$${fee.toFixed(2)}</td>
                     <td><button class="btn-danger" onclick="deleteTransaction(${item.id})">Eliminar</button></td>
                 `;
+                
+                // Acumular para resumen por activo
+                if (!assetSummary[item.asset]) {
+                    assetSummary[item.asset] = {
+                        type: item.type,
+                        amount: 0,
+                        investment: 0,
+                        currentValue: 0
+                    };
+                }
+                
+                assetSummary[item.asset].amount += item.amount;
+                assetSummary[item.asset].investment += investment + fee;
+                assetSummary[item.asset].currentValue += currentValue;
             });
-
-            // Actualizar resumen
-            const totalCost = totalInvestment + totalFees;
-            const totalPerformance = totalCost > 0 
-                ? ((totalCurrentValue / totalCost) - 1) * 100 
-                : 0;
-
-            totalInvestmentElement.textContent = `$${totalCost.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
             
-            totalValueElement.textContent = `$${totalCurrentValue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-            totalValueElement.className = totalCurrentValue >= totalCost ? 'positive' : 'negative';
+            // Llenar tabla de resumen por activo
+            Object.keys(assetSummary).forEach(asset => {
+                const item = assetSummary[asset];
+                const profitLoss = item.currentValue - item.investment;
+                const performance = (profitLoss / item.investment) * 100;
+                
+                const row = summaryTable.insertRow();
+                row.innerHTML = `
+                    <td><span class="type-badge type-${item.type}">${item.type === 'crypto' ? 'Crypto' : 'Stock'}</span></td>
+                    <td><span class="${item.type === 'crypto' ? 'crypto-badge' : 'stock-badge'}">${asset}</span></td>
+                    <td>${item.type === 'crypto' ? formatCryptoAmount(item.amount, asset) : item.amount.toFixed(4)}</td>
+                    <td>$${item.investment.toFixed(2)}</td>
+                    <td>$${item.currentValue.toFixed(2)}</td>
+                    <td><span class="${profitLoss >= 0 ? 'positive' : 'negative'}">$${profitLoss.toFixed(2)} (${performance.toFixed(2)}%)</span></td>
+                `;
+            });
             
-            totalProfitElement.textContent = `$${totalProfitLoss.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-            totalProfitElement.className = totalProfitLoss >= 0 ? 'positive' : 'negative';
+            // Actualizar resumen general
+            updateSummaryValues(
+                totalInvestment,
+                totalCurrentValue,
+                totalCurrentValue - totalInvestment,
+                ((totalCurrentValue / totalInvestment) - 1) * 100,
+                cryptoCurrentValue,
+                stockCurrentValue
+            );
             
-            totalPerformanceElement.textContent = `${totalPerformance.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}%`;
-            totalPerformanceElement.className = totalPerformance >= 0 ? 'positive' : 'negative';
-
+            // Actualizar gráfico
             updateChart();
         }
         
-        // Eliminar transacción
-        function deleteTransaction(id) {
-            if (confirm('¿Estás seguro de que quieres eliminar esta transacción?')) {
-                portfolio = portfolio.filter(item => item.id !== id);
-                savePortfolio();
-                updatePortfolioDisplay();
-                updateSubscriptions();
-            }
+        // Actualizar valores de resumen
+        function updateSummaryValues(totalInvestment, totalCurrentValue, totalProfitLoss, totalPerformance, cryptoValue, stockValue) {
+            totalInvestmentElement.textContent = `$${totalInvestment.toFixed(2)}`;
+            
+            totalValueElement.textContent = `$${totalCurrentValue.toFixed(2)}`;
+            totalValueElement.className = totalCurrentValue >= totalInvestment ? 'positive' : 'negative';
+            
+            totalProfitElement.textContent = `$${totalProfitLoss.toFixed(2)}`;
+            totalProfitElement.className = totalProfitLoss >= 0 ? 'positive' : 'negative';
+            
+            totalPerformanceElement.textContent = `${totalPerformance.toFixed(2)}%`;
+            totalPerformanceElement.className = totalPerformance >= 0 ? 'positive' : 'negative';
+            
+            cryptoValueElement.textContent = `$${cryptoValue.toFixed(2)}`;
+            cryptoValueElement.className = cryptoValue >= (totalInvestment * (cryptoValue / (cryptoValue + stockValue))) ? 'positive' : 'negative';
+            
+            stockValueElement.textContent = `$${stockValue.toFixed(2)}`;
+            stockValueElement.className = stockValue >= (totalInvestment * (stockValue / (cryptoValue + stockValue))) ? 'positive' : 'negative';
         }
         
-        // Función para conectar/reconectar
-        function connectWebSocket() {
-            // Limpiar conexión existente
-            if (binanceSocket) {
-                try {
-                    binanceSocket.close();
-                } catch (e) {
-                    console.error('Error al cerrar conexión existente:', e);
-                }
-            }
-
-            // Verificar si hay datos para conectar
-            if (portfolio.length === 0) {
-                updateConnectionStatus('disconnected', 'Sin datos');
-                return;
-            }
-
-            // Verificar máximo de intentos
-            if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) {
-                console.error('Máximo de intentos de reconexión alcanzado');
-                updateConnectionStatus('error', 'Error de conexión');
-                return;
-            }
-
-            isReconnecting = true;
-            reconnectAttempts++;
-            
-            const delay = Math.min(RECONNECT_DELAY_BASE * Math.pow(1.5, reconnectAttempts - 1), 30000);
-            console.log(`Intento de conexión ${reconnectAttempts}/${MAX_RECONNECT_ATTEMPTS}. Esperando ${delay}ms...`);
-            updateConnectionStatus('connecting', 'Conectando...');
-
-            // Usar endpoints alternativos con prioridad
-            const endpoints = [
-                'wss://stream.binance.com:9443/ws',
-                'wss://stream.binance.com:443/ws',
-                'wss://stream.binance.us:9443/ws'
-            ];
-            const selectedEndpoint = endpoints[reconnectAttempts % endpoints.length];
-            
-            setTimeout(() => {
-                console.log(`Conectando a ${selectedEndpoint}...`);
-                binanceSocket = new WebSocket(selectedEndpoint);
-
-                // Configurar timeout de conexión
-                const connectionTimeout = setTimeout(() => {
-                    console.error('Timeout de conexión');
-                    binanceSocket.close();
-                }, 10000);
-
-                // Eventos del WebSocket
-                binanceSocket.onopen = () => {
-                    clearTimeout(connectionTimeout);
-                    console.log('Conexión establecida con Binance WebSocket');
-                    isReconnecting = false;
-                    reconnectAttempts = 0;
-                    updateConnectionStatus('connected', 'Conectado');
-                    setupHeartbeat();
-                    subscribeToAllSymbols();
-                };
-
-                binanceSocket.onmessage = (event) => {
-                    try {
-                        const message = JSON.parse(event.data);
-                        
-                        if (message.e === '24hrTicker') {
-                            handleTickerUpdate(message);
-                        } else if (message.id && message.result === null) {
-                            console.debug('PONG recibido');
-                        } else if (message.error) {
-                            console.error('Error del servidor:', message.error);
-                        }
-                    } catch (error) {
-                        console.error('Error al procesar mensaje:', error);
-                    }
-                };
-
-                binanceSocket.onclose = (event) => {
-                    clearTimeout(connectionTimeout);
-                    console.log(`Conexión cerrada. Código: ${event.code}, Razón: ${event.reason}`);
-                    updateConnectionStatus('disconnected', 'Desconectado');
-                    
-                    if (event.code !== 1000 && !isReconnecting) {
-                        console.log('Programando reconexión...');
-                        setTimeout(connectWebSocket, delay);
-                    }
-                };
-
-                binanceSocket.onerror = (error) => {
-                    console.error('Error en WebSocket:', error);
-                    clearTimeout(connectionTimeout);
-                };
-            }, delay);
-        }
-
-        // Función para manejar actualizaciones de ticker
-        function handleTickerUpdate(message) {
-            const symbol = message.s;
-            const crypto = symbol.replace('USDT', '');
-            const price = parseFloat(message.c);
-            
-            cryptoPrices[crypto] = price;
-            updatePortfolioDisplay();
-            updateLastUpdated();
-        }
-
-        // Función para actualizar el estado de conexión
-        function updateConnectionStatus(status, text) {
-            connectionStatusElement.textContent = text;
-            connectionStatusElement.className = `connection-status ${status}`;
-        }
-
-        // Configuración del heartbeat mejorado
-        function setupHeartbeat() {
-            clearInterval(heartbeatInterval);
-            let missedPongs = 0;
-            const maxMissedPongs = 3;
-
-            heartbeatInterval = setInterval(() => {
-                if (binanceSocket && binanceSocket.readyState === WebSocket.OPEN) {
-                    const pingId = Date.now();
-                    
-                    const pongTimeout = setTimeout(() => {
-                        missedPongs++;
-                        console.warn(`PONG no recibido (${missedPongs}/${maxMissedPongs})`);
-                        
-                        if (missedPongs >= maxMissedPongs) {
-                            console.error('Demasiados PONGs perdidos, reconectando...');
-                            clearTimeout(pongTimeout);
-                            binanceSocket.close();
-                        }
-                    }, PONG_TIMEOUT);
-
-                    try {
-                        binanceSocket.send(JSON.stringify({
-                            method: 'PING',
-                            id: pingId
-                        }));
-
-                        const pongListener = (event) => {
-                            try {
-                                const message = JSON.parse(event.data);
-                                if (message.id === pingId && message.result === null) {
-                                    clearTimeout(pongTimeout);
-                                    missedPongs = 0;
-                                    binanceSocket.removeEventListener('message', pongListener);
-                                }
-                            } catch (e) {
-                                console.error('Error al procesar PONG:', e);
-                            }
-                        };
-                        
-                        binanceSocket.addEventListener('message', pongListener);
-                    } catch (error) {
-                        console.error('Error al enviar PING:', error);
-                        clearTimeout(pongTimeout);
-                    }
-                }
-            }, HEARTBEAT_INTERVAL);
-        }
-
-        // Suscripción a símbolos con manejo de lotes
-        function subscribeToAllSymbols() {
-            if (!binanceSocket || binanceSocket.readyState !== WebSocket.OPEN) {
-                console.error('WebSocket no listo para suscripciones');
-                return;
-            }
-
-            const symbols = [...new Set(portfolio.map(item => item.crypto + 'USDT'))];
-            if (symbols.length === 0) return;
-
-            // Dividir en lotes de 100 símbolos (límite de Binance)
-            const batchSize = 100;
-            for (let i = 0; i < symbols.length; i += batchSize) {
-                const batch = symbols.slice(i, i + batchSize);
-                setTimeout(() => {
-                    try {
-                        binanceSocket.send(JSON.stringify({
-                            method: 'SUBSCRIBE',
-                            params: batch.map(s => `${s.toLowerCase()}@ticker`),
-                            id: Date.now() + i
-                        }));
-                        
-                        batch.forEach(s => subscribedSymbols.add(s));
-                        console.log(`Suscrito a lote con ${batch.length} símbolos`);
-                    } catch (error) {
-                        console.error('Error al suscribir lote:', error);
-                    }
-                }, i * 300); // Pequeño retraso entre lotes
-            }
-        }
-
-        // Actualización de suscripciones optimizada
-        function updateSubscriptions() {
-            if (!binanceSocket || binanceSocket.readyState !== WebSocket.OPEN) return;
-
-            const currentSymbols = new Set(portfolio.map(item => item.crypto + 'USDT'));
-            const toUnsubscribe = [...subscribedSymbols].filter(s => !currentSymbols.has(s));
-            const toSubscribe = [...currentSymbols].filter(s => !subscribedSymbols.has(s));
-
-            // Manejar desuscripciones
-            unsubscribeSymbols(toUnsubscribe);
-            
-            // Manejar suscripciones
-            subscribeSymbols(toSubscribe);
-        }
-
-        function unsubscribeSymbols(symbols) {
-            if (symbols.length === 0) return;
-
-            const batchSize = 100;
-            for (let i = 0; i < symbols.length; i += batchSize) {
-                const batch = symbols.slice(i, i + batchSize);
-                setTimeout(() => {
-                    try {
-                        binanceSocket.send(JSON.stringify({
-                            method: 'UNSUBSCRIBE',
-                            params: batch.map(s => `${s.toLowerCase()}@ticker`),
-                            id: Date.now() + i + 1000
-                        }));
-                        
-                        batch.forEach(s => subscribedSymbols.delete(s));
-                    } catch (error) {
-                        console.error('Error al desuscribir lote:', error);
-                    }
-                }, i * 300);
-            }
-        }
-
-        function subscribeSymbols(symbols) {
-            if (symbols.length === 0) return;
-
-            const batchSize = 100;
-            for (let i = 0; i < symbols.length; i += batchSize) {
-                const batch = symbols.slice(i, i + batchSize);
-                setTimeout(() => {
-                    try {
-                        binanceSocket.send(JSON.stringify({
-                            method: 'SUBSCRIBE',
-                            params: batch.map(s => `${s.toLowerCase()}@ticker`),
-                            id: Date.now() + i + 2000
-                        }));
-                        
-                        batch.forEach(s => subscribedSymbols.add(s));
-                    } catch (error) {
-                        console.error('Error al suscribir lote:', error);
-                    }
-                }, i * 300);
-            }
-        }
-
         // Actualizar gráfico
         function updateChart() {
             const ctx = document.getElementById('portfolio-chart');
             
-            const cryptoGroups = {};
+            const cryptoData = {};
+            const stockData = {};
+            
             portfolio.forEach(item => {
-                if (!cryptoGroups[item.crypto]) {
-                    cryptoGroups[item.crypto] = {
-                        amount: 0,
-                        currentValue: 0
-                    };
+                const currentPrice = item.type === 'crypto' 
+                    ? cryptoPrices[item.asset] 
+                    : stockPrices[item.asset];
+                    
+                if (!currentPrice) return;
+                
+                const currentValue = item.amount * currentPrice;
+                
+                if (item.type === 'crypto') {
+                    if (!cryptoData[item.asset]) {
+                        cryptoData[item.asset] = 0;
+                    }
+                    cryptoData[item.asset] += currentValue;
+                } else {
+                    if (!stockData[item.asset]) {
+                        stockData[item.asset] = 0;
+                    }
+                    stockData[item.asset] += currentValue;
                 }
-                cryptoGroups[item.crypto].amount += item.amount;
-                cryptoGroups[item.crypto].currentValue += item.amount * (cryptoPrices[item.crypto] || 0);
             });
             
-            const labels = Object.keys(cryptoGroups);
-            const data = labels.map(crypto => cryptoGroups[crypto].currentValue);
+            const labels = [
+                ...Object.keys(cryptoData).map(c => `${c} (Crypto)`),
+                ...Object.keys(stockData).map(s => `${s} (Stock)`)
+            ];
+            
+            const data = [
+                ...Object.values(cryptoData),
+                ...Object.values(stockData)
+            ];
+            
+            const backgroundColors = [
+                ...Object.keys(cryptoData).map((_, i) => 
+                    `hsl(${(i * 360 / Math.max(1, Object.keys(cryptoData).length))}, 70%, 50%)`
+                ),
+                ...Object.keys(stockData).map((_, i) => 
+                    `hsl(${(i * 360 / Math.max(1, Object.keys(stockData).length))}, 50%, 70%)`
+                )
+            ];
             
             if (!portfolioChart) {
                 portfolioChart = new Chart(ctx, {
@@ -1077,11 +1158,7 @@
                         labels: labels,
                         datasets: [{
                             data: data,
-                            backgroundColor: [
-                                '#3498db', '#2ecc71', '#e74c3c', '#f39c12', 
-                                '#1abc9c', '#9b59b6', '#34495e', '#e67e22',
-                                '#27ae60', '#d35400', '#2c3e50', '#16a085'
-                            ],
+                            backgroundColor: backgroundColors,
                             borderWidth: 1,
                             borderColor: '#fff'
                         }]
@@ -1123,8 +1200,49 @@
             } else {
                 portfolioChart.data.labels = labels;
                 portfolioChart.data.datasets[0].data = data;
+                portfolioChart.data.datasets[0].backgroundColor = backgroundColors;
                 portfolioChart.update();
             }
+        }
+        
+        // Eliminar transacción
+        function deleteTransaction(id) {
+            if (confirm('¿Estás seguro de que quieres eliminar esta transacción?')) {
+                portfolio = portfolio.filter(item => item.id !== id);
+                savePortfolio();
+                updatePortfolioDisplay();
+                
+                // Actualizar suscripciones WebSocket si era una criptomoneda
+                const cryptoItems = portfolio.filter(item => item.type === 'crypto');
+                const currentCryptoSymbols = new Set(cryptoItems.map(item => item.asset + 'USDT'));
+                const toUnsubscribe = [...subscribedSymbols].filter(s => !currentCryptoSymbols.has(s));
+                
+                if (toUnsubscribe.length > 0 && binanceSocket && binanceSocket.readyState === WebSocket.OPEN) {
+                    binanceSocket.send(JSON.stringify({
+                        method: 'UNSUBSCRIBE',
+                        params: toUnsubscribe.map(s => `${s.toLowerCase()}@ticker`),
+                        id: Date.now()
+                    }));
+                    
+                    toUnsubscribe.forEach(s => subscribedSymbols.delete(s));
+                }
+            }
+        }
+        
+        // Formatear cantidad de criptomoneda
+        function formatCryptoAmount(amount, crypto) {
+            const decimals = {
+                'BTC': 8, 'ETH': 6, 'BNB': 4, 'SOL': 2,
+                'XRP': 0, 'ADA': 0, 'DOT': 2, 'DOGE': 0,
+                'default': 8
+            };
+            
+            const decimalPlaces = decimals[crypto] || decimals['default'];
+            return parseFloat(amount.toFixed(decimalPlaces)).toLocaleString('en-US', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: decimalPlaces,
+                useGrouping: true
+            });
         }
         
         // Actualizar marca de tiempo
@@ -1133,30 +1251,22 @@
             lastUpdatedElement.textContent = `Última actualización: ${now.toLocaleString()}`;
         }
         
-        // Inicialización mejorada
+        // Inicialización
         function init() {
             document.getElementById('date').valueAsDate = new Date();
-            updatePortfolioDisplay();
             
-            // Verificar si hay datos antes de conectar
-            if (portfolio.length > 0) {
-                connectWebSocket();
-            } else {
-                // Intentar cargar datos guardados
-                const savedData = localStorage.getItem('cryptoPortfolio');
-                if (savedData && JSON.parse(savedData).length > 0) {
-                    portfolio = JSON.parse(savedData);
-                    updatePortfolioDisplay();
-                    connectWebSocket();
-                }
-            }
+            // Conectar WebSocket para criptomonedas
+            connectWebSocket();
             
-            // Reconectar automáticamente si la conexión se pierde
-            window.addEventListener('online', () => {
-                if (!binanceSocket || binanceSocket.readyState !== WebSocket.OPEN) {
-                    connectWebSocket();
+            // Cargar precios para las acciones existentes
+            portfolio.forEach(item => {
+                if (item.type === 'stock' && !stockPrices[item.asset]) {
+                    fetchStockPrice(item.asset);
                 }
             });
+            
+            // Actualizar display inicial
+            updatePortfolioDisplay();
         }
 
         // Iniciar cuando el DOM esté listo
